@@ -20,7 +20,8 @@
             "maximum": 100,
             "default": 50
           },
-          "cursor": { "type": "string" }
+          "cursor": { "type": "string" },
+          "community": { "type": "string" }
         }
       },
       "output": {
@@ -36,7 +37,8 @@
                 "type": "ref",
                 "ref": "app.bsky.feed.defs#skeletonFeedPost"
               }
-            }
+            },
+            "community": { "type": "string" }
           }
         }
       },

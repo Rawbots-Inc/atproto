@@ -12,13 +12,13 @@ This API is a client for ATProtocol servers. It communicates using HTTP. It incl
 First install the package:
 
 ```sh
-yarn add @atproto/api
+yarn add @reprun/atproto-api
 ```
 
 Then in your application:
 
 ```typescript
-import { AtpAgent } from '@atproto/api'
+import { AtpAgent } from '@reprun/atproto-api'
 
 const agent = new AtpAgent({ service: 'https://example.com' })
 ```

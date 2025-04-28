@@ -1,9 +1,10 @@
 {
-  "name": "@atproto/api",
+  "name": "@reprun/atproto-api",
   "version": "0.15.5",
   "license": "MIT",
   "description": "Client library for atproto and Bluesky",
   "keywords": [
+    "reprun",
     "atproto",
     "bluesky",
     "api"

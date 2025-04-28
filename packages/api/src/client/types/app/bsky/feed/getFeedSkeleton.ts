@@ -21,6 +21,7 @@ export interface QueryParams {
   feed: string
   limit?: number
   cursor?: string
+  community?: string
 }
 
 export type InputSchema = undefined
@@ -28,6 +29,7 @@ export type InputSchema = undefined
 export interface OutputSchema {
   cursor?: string
   feed: AppBskyFeedDefs.SkeletonFeedPost[]
+  community?: string
 }
 
 export interface CallOptions {
