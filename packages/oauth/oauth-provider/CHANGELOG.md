@@ -1,5 +1,97 @@
 # @atproto/oauth-provider
 
+## 0.7.5
+
+### Patch Changes
+
+- [#3783](https://github.com/bluesky-social/atproto/pull/3783) [`d794b0676`](https://github.com/bluesky-social/atproto/commit/d794b06763050b4b32484e90116461deae45cbe3) Thanks [@devinivy](https://github.com/devinivy)! - Revert "Use more secure COEP header when hCaptcha is enabled"
+
+## 0.7.4
+
+### Patch Changes
+
+- Updated dependencies [[`81524fcb0`](https://github.com/bluesky-social/atproto/commit/81524fcb007f12161fd6928badbf176b1568b4b3), [`a70dad5ae`](https://github.com/bluesky-social/atproto/commit/a70dad5aea32ce26d2cca170a06d184935b4865d)]:
+  - @atproto/oauth-provider-ui@0.1.3
+
+## 0.7.3
+
+### Patch Changes
+
+- [#3764](https://github.com/bluesky-social/atproto/pull/3764) [`30f9b6690`](https://github.com/bluesky-social/atproto/commit/30f9b6690e0e2c5810772e94e631322b9d89c65a) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Allow customizing contrast and hue colors
+
+- Updated dependencies [[`30f9b6690`](https://github.com/bluesky-social/atproto/commit/30f9b6690e0e2c5810772e94e631322b9d89c65a), [`30f9b6690`](https://github.com/bluesky-social/atproto/commit/30f9b6690e0e2c5810772e94e631322b9d89c65a), [`0d77d1b55`](https://github.com/bluesky-social/atproto/commit/0d77d1b550a58117aee8f7f1e2be24d255ade9e4), [`30f9b6690`](https://github.com/bluesky-social/atproto/commit/30f9b6690e0e2c5810772e94e631322b9d89c65a), [`30f9b6690`](https://github.com/bluesky-social/atproto/commit/30f9b6690e0e2c5810772e94e631322b9d89c65a), [`30f9b6690`](https://github.com/bluesky-social/atproto/commit/30f9b6690e0e2c5810772e94e631322b9d89c65a), [`0d77d1b55`](https://github.com/bluesky-social/atproto/commit/0d77d1b550a58117aee8f7f1e2be24d255ade9e4), [`30f9b6690`](https://github.com/bluesky-social/atproto/commit/30f9b6690e0e2c5810772e94e631322b9d89c65a), [`30f9b6690`](https://github.com/bluesky-social/atproto/commit/30f9b6690e0e2c5810772e94e631322b9d89c65a)]:
+  - @atproto/oauth-provider-frontend@0.1.3
+  - @atproto-labs/simple-store@0.2.0
+  - @atproto/oauth-types@0.2.6
+  - @atproto-labs/simple-store-memory@0.1.3
+  - @atproto/oauth-provider-api@0.1.1
+  - @atproto/oauth-provider-ui@0.1.2
+
+## 0.7.2
+
+### Patch Changes
+
+- [#3755](https://github.com/bluesky-social/atproto/pull/3755) [`96de2acb3`](https://github.com/bluesky-social/atproto/commit/96de2acb301683effe4313cb93d7747f87a73b5e) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Use more secure COEP header when hCaptcha is enabled
+
+- Updated dependencies [[`0f3899dd5`](https://github.com/bluesky-social/atproto/commit/0f3899dd52d0094c29222c65e2636217f9a8ece4)]:
+  - @atproto/oauth-provider-frontend@0.1.2
+
+## 0.7.1
+
+### Patch Changes
+
+- [#3754](https://github.com/bluesky-social/atproto/pull/3754) [`1e461eab0`](https://github.com/bluesky-social/atproto/commit/1e461eab033f728f537db554b3072b7eda7e5e8f) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Remove "dependency" on `rollup-plugin-bundle-manifest`
+
+- Updated dependencies [[`1e461eab0`](https://github.com/bluesky-social/atproto/commit/1e461eab033f728f537db554b3072b7eda7e5e8f), [`1e461eab0`](https://github.com/bluesky-social/atproto/commit/1e461eab033f728f537db554b3072b7eda7e5e8f)]:
+  - @atproto/oauth-provider-frontend@0.1.1
+  - @atproto/oauth-provider-ui@0.1.1
+
+## 0.7.0
+
+### Minor Changes
+
+- [#3659](https://github.com/bluesky-social/atproto/pull/3659) [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e) Thanks [@matthieusieben](https://github.com/matthieusieben)! - OAuthProvider will now always generate JWT access tokens. This will prevent "leaked" `tokenId` values from being used as access tokens directly. This change also introduces an `AccessTokenMode` that allows generating "stateless" tokens (when the AS and RS are different servers), or shorter "light" tokens (that only act as wrapper around `tokenId` values).
+
+- [#3659](https://github.com/bluesky-social/atproto/pull/3659) [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Remove unused `getAuthorizationDetails` hook
+
+- [#3659](https://github.com/bluesky-social/atproto/pull/3659) [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Change name of `onSignupAttempt` hook to `onSignUpAttempt`
+
+- [#3659](https://github.com/bluesky-social/atproto/pull/3659) [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Store & verify new authorization requests against previously approved scopes for the same client
+
+- [#3659](https://github.com/bluesky-social/atproto/pull/3659) [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Split oauth endpoints & authorization page routes from `OAuthProvider`
+
+- [#3659](https://github.com/bluesky-social/atproto/pull/3659) [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Fix bug allowing to authenticate using previous account even if the "remember me" checkbox was left unchecked
+
+- [#3659](https://github.com/bluesky-social/atproto/pull/3659) [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Change "brand" color to "primary"
+
+- [#3659](https://github.com/bluesky-social/atproto/pull/3659) [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Remove instrospection endpoint
+
+### Patch Changes
+
+- [#3659](https://github.com/bluesky-social/atproto/pull/3659) [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Security fix: Properly validate JWT `exp` claim when it is zero.
+
+- [#3659](https://github.com/bluesky-social/atproto/pull/3659) [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Always log to console in dev mode
+
+- [#3659](https://github.com/bluesky-social/atproto/pull/3659) [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Do not return invalid authorization response errors
+
+- [#3659](https://github.com/bluesky-social/atproto/pull/3659) [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e) Thanks [@matthieusieben](https://github.com/matthieusieben)! - Apply time mitigation strategy on the sensitive part of the operation only.
+
+- Updated dependencies [[`8b98fec88`](https://github.com/bluesky-social/atproto/commit/8b98fec8857aacddeed9efb5c755474951e6d9d4), [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e), [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e), [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e), [`26a077716`](https://github.com/bluesky-social/atproto/commit/26a07771673bf1090a61efb7c970235f0b2509fc), [`371e04aad`](https://github.com/bluesky-social/atproto/commit/371e04aad2a3e8ae3fe185ce15fc8eb051cab78e)]:
+  - @atproto/oauth-provider-ui@0.1.0
+  - @atproto/oauth-types@0.2.5
+  - @atproto-labs/rollup-plugin-bundle-manifest@0.2.0
+  - @atproto/oauth-provider-api@0.1.0
+  - @atproto/jwk@0.1.5
+  - @atproto/oauth-provider-frontend@0.1.0
+  - @atproto/jwk-jose@0.1.6
+
+## 0.6.6
+
+### Patch Changes
+
+- Updated dependencies [[`4db923ca1`](https://github.com/bluesky-social/atproto/commit/4db923ca1c4fadd31d41c851933659e5186ee144)]:
+  - @atproto/common@0.4.10
+
 ## 0.6.5
 
 ### Patch Changes

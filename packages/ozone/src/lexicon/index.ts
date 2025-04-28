@@ -75,11 +75,13 @@ import * as ComAtprotoSyncGetBlob from './types/com/atproto/sync/getBlob.js'
 import * as ComAtprotoSyncGetBlocks from './types/com/atproto/sync/getBlocks.js'
 import * as ComAtprotoSyncGetCheckout from './types/com/atproto/sync/getCheckout.js'
 import * as ComAtprotoSyncGetHead from './types/com/atproto/sync/getHead.js'
+import * as ComAtprotoSyncGetHostStatus from './types/com/atproto/sync/getHostStatus.js'
 import * as ComAtprotoSyncGetLatestCommit from './types/com/atproto/sync/getLatestCommit.js'
 import * as ComAtprotoSyncGetRecord from './types/com/atproto/sync/getRecord.js'
 import * as ComAtprotoSyncGetRepo from './types/com/atproto/sync/getRepo.js'
 import * as ComAtprotoSyncGetRepoStatus from './types/com/atproto/sync/getRepoStatus.js'
 import * as ComAtprotoSyncListBlobs from './types/com/atproto/sync/listBlobs.js'
+import * as ComAtprotoSyncListHosts from './types/com/atproto/sync/listHosts.js'
 import * as ComAtprotoSyncListRepos from './types/com/atproto/sync/listRepos.js'
 import * as ComAtprotoSyncListReposByCollection from './types/com/atproto/sync/listReposByCollection.js'
 import * as ComAtprotoSyncNotifyOfUpdate from './types/com/atproto/sync/notifyOfUpdate.js'
@@ -143,8 +145,12 @@ import * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/
 import * as AppBskyNotificationUpdateSeen from './types/app/bsky/notification/updateSeen.js'
 import * as AppBskyUnspeccedGetConfig from './types/app/bsky/unspecced/getConfig.js'
 import * as AppBskyUnspeccedGetPopularFeedGenerators from './types/app/bsky/unspecced/getPopularFeedGenerators.js'
+import * as AppBskyUnspeccedGetSuggestedFeeds from './types/app/bsky/unspecced/getSuggestedFeeds.js'
+import * as AppBskyUnspeccedGetSuggestedFeedsSkeleton from './types/app/bsky/unspecced/getSuggestedFeedsSkeleton.js'
 import * as AppBskyUnspeccedGetSuggestedStarterPacks from './types/app/bsky/unspecced/getSuggestedStarterPacks.js'
 import * as AppBskyUnspeccedGetSuggestedStarterPacksSkeleton from './types/app/bsky/unspecced/getSuggestedStarterPacksSkeleton.js'
+import * as AppBskyUnspeccedGetSuggestedUsers from './types/app/bsky/unspecced/getSuggestedUsers.js'
+import * as AppBskyUnspeccedGetSuggestedUsersSkeleton from './types/app/bsky/unspecced/getSuggestedUsersSkeleton.js'
 import * as AppBskyUnspeccedGetSuggestionsSkeleton from './types/app/bsky/unspecced/getSuggestionsSkeleton.js'
 import * as AppBskyUnspeccedGetTaggedSuggestions from './types/app/bsky/unspecced/getTaggedSuggestions.js'
 import * as AppBskyUnspeccedGetTrendingTopics from './types/app/bsky/unspecced/getTrendingTopics.js'
@@ -182,6 +188,7 @@ import * as ToolsOzoneCommunicationCreateTemplate from './types/tools/ozone/comm
 import * as ToolsOzoneCommunicationDeleteTemplate from './types/tools/ozone/communication/deleteTemplate.js'
 import * as ToolsOzoneCommunicationListTemplates from './types/tools/ozone/communication/listTemplates.js'
 import * as ToolsOzoneCommunicationUpdateTemplate from './types/tools/ozone/communication/updateTemplate.js'
+import * as ToolsOzoneHostingGetAccountHistory from './types/tools/ozone/hosting/getAccountHistory.js'
 import * as ToolsOzoneModerationEmitEvent from './types/tools/ozone/moderation/emitEvent.js'
 import * as ToolsOzoneModerationGetEvent from './types/tools/ozone/moderation/getEvent.js'
 import * as ToolsOzoneModerationGetRecord from './types/tools/ozone/moderation/getRecord.js'
@@ -210,6 +217,9 @@ import * as ToolsOzoneTeamAddMember from './types/tools/ozone/team/addMember.js'
 import * as ToolsOzoneTeamDeleteMember from './types/tools/ozone/team/deleteMember.js'
 import * as ToolsOzoneTeamListMembers from './types/tools/ozone/team/listMembers.js'
 import * as ToolsOzoneTeamUpdateMember from './types/tools/ozone/team/updateMember.js'
+import * as ToolsOzoneVerificationGrantVerifications from './types/tools/ozone/verification/grantVerifications.js'
+import * as ToolsOzoneVerificationListVerifications from './types/tools/ozone/verification/listVerifications.js'
+import * as ToolsOzoneVerificationRevokeVerifications from './types/tools/ozone/verification/revokeVerifications.js'
 
 export const COM_ATPROTO_MODERATION = {
   DefsReasonSpam: 'com.atproto.moderation.defs#reasonSpam',
@@ -251,6 +261,7 @@ export const TOOLS_OZONE_TEAM = {
   DefsRoleAdmin: 'tools.ozone.team.defs#roleAdmin',
   DefsRoleModerator: 'tools.ozone.team.defs#roleModerator',
   DefsRoleTriage: 'tools.ozone.team.defs#roleTriage',
+  DefsRoleVerifier: 'tools.ozone.team.defs#roleVerifier',
 }
 
 export function createServer(options?: XrpcOptions): Server {
@@ -1102,6 +1113,17 @@ export class ComAtprotoSyncNS {
     return this._server.xrpc.method(nsid, cfg)
   }
 
+  getHostStatus<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncGetHostStatus.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncGetHostStatus.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.getHostStatus' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
   getLatestCommit<AV extends AuthVerifier>(
     cfg: ConfigOf<
       AV,
@@ -1154,6 +1176,17 @@ export class ComAtprotoSyncNS {
     >,
   ) {
     const nsid = 'com.atproto.sync.listBlobs' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  listHosts<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncListHosts.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncListHosts.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.listHosts' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
   }
 
@@ -1958,6 +1991,28 @@ export class AppBskyUnspeccedNS {
     return this._server.xrpc.method(nsid, cfg)
   }
 
+  getSuggestedFeeds<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetSuggestedFeeds.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetSuggestedFeeds.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getSuggestedFeeds' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getSuggestedFeedsSkeleton<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetSuggestedFeedsSkeleton.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetSuggestedFeedsSkeleton.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getSuggestedFeedsSkeleton' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
   getSuggestedStarterPacks<AV extends AuthVerifier>(
     cfg: ConfigOf<
       AV,
@@ -1979,6 +2034,28 @@ export class AppBskyUnspeccedNS {
     >,
   ) {
     const nsid = 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getSuggestedUsers<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetSuggestedUsers.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetSuggestedUsers.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getSuggestedUsers' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getSuggestedUsersSkeleton<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetSuggestedUsersSkeleton.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetSuggestedUsersSkeleton.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getSuggestedUsersSkeleton' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
   }
 
@@ -2415,22 +2492,26 @@ export class ToolsNS {
 export class ToolsOzoneNS {
   _server: Server
   communication: ToolsOzoneCommunicationNS
+  hosting: ToolsOzoneHostingNS
   moderation: ToolsOzoneModerationNS
   server: ToolsOzoneServerNS
   set: ToolsOzoneSetNS
   setting: ToolsOzoneSettingNS
   signature: ToolsOzoneSignatureNS
   team: ToolsOzoneTeamNS
+  verification: ToolsOzoneVerificationNS
 
   constructor(server: Server) {
     this._server = server
     this.communication = new ToolsOzoneCommunicationNS(server)
+    this.hosting = new ToolsOzoneHostingNS(server)
     this.moderation = new ToolsOzoneModerationNS(server)
     this.server = new ToolsOzoneServerNS(server)
     this.set = new ToolsOzoneSetNS(server)
     this.setting = new ToolsOzoneSettingNS(server)
     this.signature = new ToolsOzoneSignatureNS(server)
     this.team = new ToolsOzoneTeamNS(server)
+    this.verification = new ToolsOzoneVerificationNS(server)
   }
 }
 
@@ -2482,6 +2563,25 @@ export class ToolsOzoneCommunicationNS {
     >,
   ) {
     const nsid = 'tools.ozone.communication.updateTemplate' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class ToolsOzoneHostingNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  getAccountHistory<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneHostingGetAccountHistory.Handler<ExtractAuth<AV>>,
+      ToolsOzoneHostingGetAccountHistory.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.hosting.getAccountHistory' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
   }
 }
@@ -2838,6 +2938,47 @@ export class ToolsOzoneTeamNS {
     >,
   ) {
     const nsid = 'tools.ozone.team.updateMember' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class ToolsOzoneVerificationNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  grantVerifications<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneVerificationGrantVerifications.Handler<ExtractAuth<AV>>,
+      ToolsOzoneVerificationGrantVerifications.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.verification.grantVerifications' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  listVerifications<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneVerificationListVerifications.Handler<ExtractAuth<AV>>,
+      ToolsOzoneVerificationListVerifications.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.verification.listVerifications' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  revokeVerifications<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneVerificationRevokeVerifications.Handler<ExtractAuth<AV>>,
+      ToolsOzoneVerificationRevokeVerifications.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.verification.revokeVerifications' // @ts-ignore
     return this._server.xrpc.method(nsid, cfg)
   }
 }

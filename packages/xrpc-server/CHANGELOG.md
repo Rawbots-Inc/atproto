@@ -1,5 +1,27 @@
 # @atproto/xrpc-server
 
+## 0.7.17
+
+### Patch Changes
+
+- [#3765](https://github.com/bluesky-social/atproto/pull/3765) [`45354c84f`](https://github.com/bluesky-social/atproto/commit/45354c84f898d79f58c14b5c0da3661beb7353f9) Thanks [@foysalit](https://github.com/foysalit)! - Expose WebSocketKeepAlive from xrpc-server package
+
+## 0.7.16
+
+### Patch Changes
+
+- [#3789](https://github.com/bluesky-social/atproto/pull/3789) [`da168588d`](https://github.com/bluesky-social/atproto/commit/da168588de59e5048d255866205bd16c5ab5f95c) Thanks [@rafaelbsky](https://github.com/rafaelbsky)! - Ensure safe HTTP code in error middleware
+
+## 0.7.15
+
+### Patch Changes
+
+- Updated dependencies [[`4db923ca1`](https://github.com/bluesky-social/atproto/commit/4db923ca1c4fadd31d41c851933659e5186ee144)]:
+  - @atproto/common@0.4.10
+  - @atproto/lexicon@0.4.10
+  - @atproto/crypto@0.4.4
+  - @atproto/xrpc@0.6.12
+
 ## 0.7.14
 
 ### Patch Changes

@@ -2,7 +2,7 @@ import { mapDefined } from '@atproto/common'
 import { AtUri, INVALID_HANDLE, normalizeDatetimeAlways } from '@atproto/syntax'
 import { ProfileViewerState } from '../hydration/actor'
 import { FeedItem, Like, Post, Repost } from '../hydration/feed'
-import { Follow } from '../hydration/graph'
+import { Follow, Verification } from '../hydration/graph'
 import { HydrationState } from '../hydration/hydrator'
 import { Label } from '../hydration/label'
 import { RecordInfo } from '../hydration/util'
@@ -13,6 +13,8 @@ import {
   ProfileView,
   ProfileViewBasic,
   ProfileViewDetailed,
+  VerificationState,
+  VerificationView,
   ViewerState as ProfileViewer,
 } from '../lexicon/types/app/bsky/actor/defs'
 import {
@@ -46,6 +48,7 @@ import {
   StarterPackViewBasic,
 } from '../lexicon/types/app/bsky/graph/defs'
 import { Record as FollowRecord } from '../lexicon/types/app/bsky/graph/follow'
+import { Record as VerificationRecord } from '../lexicon/types/app/bsky/graph/verification'
 import {
   LabelerView,
   LabelerViewDetailed,
@@ -54,6 +57,7 @@ import {
   Record as LabelerRecord,
   isRecord as isLabelerRecord,
 } from '../lexicon/types/app/bsky/labeler/service'
+import { RecordDeleted as NotificationRecordDeleted } from '../lexicon/types/app/bsky/notification/defs'
 import { isSelfLabels } from '../lexicon/types/com/atproto/label/defs'
 import { $Typed, Un$Typed } from '../lexicon/util'
 import { Notification } from '../proto/bsky_pb'
@@ -96,6 +100,14 @@ import {
   parsePostgate,
   parseThreadGate,
 } from './util'
+
+const notificationDeletedRecord = {
+  $type: 'app.bsky.notification.defs#recordDeleted' as const,
+}
+
+// Pre-computed CID for the `notificationDeletedRecord`.
+const notificationDeletedRecordCid =
+  'bafyreidad6nyekfa4a67yfb573ptxiv6s7kyxyg2ra6qbbemcruadvtuim'
 
 export class Views {
   public imgUriBuilder: ImageUriBuilder = this.opts.imgUriBuilder
@@ -215,6 +227,7 @@ export class Views {
     if (!baseView) return
     const knownFollowers = this.knownFollowers(did, state)
     const profileAggs = state.profileAggs?.get(did)
+
     return {
       ...baseView,
       viewer: baseView.viewer
@@ -249,7 +262,6 @@ export class Views {
       pinnedPost: safePinnedPost(actor.profile?.pinnedPost),
     }
   }
-
   profile(
     did: string,
     state: HydrationState,
@@ -317,6 +329,7 @@ export class Views {
       viewer: this.profileViewer(did, state),
       labels,
       createdAt: actor.createdAt?.toISOString(),
+      verification: this.verification(did, state),
     }
   }
 
@@ -383,6 +396,61 @@ export class Views {
       return this.profileBasic(followerDid, state)
     })
     return { count: knownFollowers.count, followers }
+  }
+
+  verification(
+    did: string,
+    state: HydrationState,
+  ): VerificationState | undefined {
+    const actor = state.actors?.get(did)
+    if (!actor) return
+
+    const isImpersonation = state.labels?.get(did)?.isImpersonation
+
+    const verifications: VerificationView[] = actor.verifications.map(
+      ({ issuer, uri, displayName, handle, createdAt }) => {
+        // @NOTE: We don't factor-in impersonation when evaluating the validity of each verification,
+        // only in the overall profile verification validity.
+        const isValid =
+          !!displayName &&
+          displayName === actor.profile?.displayName &&
+          !!handle &&
+          handle === actor.handle
+
+        return {
+          issuer,
+          uri,
+          isValid,
+          createdAt,
+        }
+      },
+    )
+    const hasValidVerification = verifications.some((v) => v.isValid)
+
+    const verifiedStatus = verifications.length
+      ? hasValidVerification && !isImpersonation
+        ? 'valid'
+        : 'invalid'
+      : 'none'
+    const trustedVerifierStatus = actor.trustedVerifier
+      ? isImpersonation
+        ? 'invalid'
+        : 'valid'
+      : 'none'
+
+    if (
+      verifications.length === 0 &&
+      verifiedStatus === 'none' &&
+      trustedVerifierStatus === 'none'
+    ) {
+      return undefined
+    }
+
+    return {
+      verifications,
+      verifiedStatus,
+      trustedVerifierStatus,
+    }
   }
 
   blockedProfileViewer(
@@ -523,6 +591,8 @@ export class Views {
       | FollowRecord
       | ProfileRecord
       | LabelerRecord
+      | VerificationRecord
+      | NotificationRecordDeleted
   }): Label[] {
     if (!uri || !cid || !record) return []
 
@@ -1356,6 +1426,8 @@ export class Views {
       | Repost
       | Follow
       | RecordInfo<ProfileRecord>
+      | Verification
+      | Pick<RecordInfo<Required<NotificationRecordDeleted>>, 'cid' | 'record'>
       | undefined
       | null
 
@@ -1367,6 +1439,13 @@ export class Views {
       recordInfo = state.reposts?.get(notif.uri)
     } else if (uri.collection === ids.AppBskyGraphFollow) {
       recordInfo = state.follows?.get(notif.uri)
+    } else if (uri.collection === ids.AppBskyGraphVerification) {
+      // When a verification record is removed, the record won't be found,
+      // both for the `verified` and `unverified` notifications.
+      recordInfo = state.verifications?.get(notif.uri) ?? {
+        record: notificationDeletedRecord,
+        cid: notificationDeletedRecordCid,
+      }
     } else if (uri.collection === ids.AppBskyActorProfile) {
       const actor = state.actors?.get(authorDid)
       recordInfo =

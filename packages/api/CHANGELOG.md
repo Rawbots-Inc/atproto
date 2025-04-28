@@ -1,5 +1,74 @@
 # @atproto/api
 
+## 0.15.5
+
+### Patch Changes
+
+- [#3765](https://github.com/bluesky-social/atproto/pull/3765) [`45354c84f`](https://github.com/bluesky-social/atproto/commit/45354c84f898d79f58c14b5c0da3661beb7353f9) Thanks [@foysalit](https://github.com/foysalit)! - Add verification lexicons to ozone
+
+## 0.15.4
+
+### Patch Changes
+
+- [#3768](https://github.com/bluesky-social/atproto/pull/3768) [`7af77f3ed`](https://github.com/bluesky-social/atproto/commit/7af77f3edfe52f77729f61de4188e8375f03b4ef) Thanks [@devinivy](https://github.com/devinivy)! - Support tools.ozone.hosting.getAccountHistory
+
+## 0.15.3
+
+### Patch Changes
+
+- [#3773](https://github.com/bluesky-social/atproto/pull/3773) [`0087dc1c0`](https://github.com/bluesky-social/atproto/commit/0087dc1c0bafad1d0a0a1a16683d250dea031bf9) Thanks [@rafaelbsky](https://github.com/rafaelbsky)! - Add verification notifications
+
+## 0.15.2
+
+### Patch Changes
+
+- [#3770](https://github.com/bluesky-social/atproto/pull/3770) [`553c988f1`](https://github.com/bluesky-social/atproto/commit/553c988f1d226b3d2fbe94c117b088f5c82db794) Thanks [@estrattonbailey](https://github.com/estrattonbailey)! - Add `verificationPrefs` and `hideBadges` setting to user prefs.
+
+## 0.15.1
+
+### Patch Changes
+
+- [#3761](https://github.com/bluesky-social/atproto/pull/3761) [`688268b6a`](https://github.com/bluesky-social/atproto/commit/688268b6a5ee30f0922ee152ffbd26583d164ae4) Thanks [@rafaelbsky](https://github.com/rafaelbsky)! - Add verification state to profile view lexicons
+
+- [#3766](https://github.com/bluesky-social/atproto/pull/3766) [`8d99915ce`](https://github.com/bluesky-social/atproto/commit/8d99915ce02c73b9b37bf121ccd2703fa14a906a) Thanks [@rafaelbsky](https://github.com/rafaelbsky)! - Update chat verification lexicon
+
+## 0.15.0
+
+### Minor Changes
+
+- [#3715](https://github.com/bluesky-social/atproto/pull/3715) [`23462184d`](https://github.com/bluesky-social/atproto/commit/23462184dc941ba2fc3b4d054985a53715585020) Thanks [@knotbin](https://github.com/knotbin)! - run codegen for changes in lex-cli
+
+## 0.14.22
+
+### Patch Changes
+
+- [#3714](https://github.com/bluesky-social/atproto/pull/3714) [`fc61662d7`](https://github.com/bluesky-social/atproto/commit/fc61662d7b88597f78383e37ee54264a8bb4b670) Thanks [@bnewbold](https://github.com/bnewbold)! - new lexicons: listHosts and getHostStatus endpoints under com.atproto.sync
+
+- [#3741](https://github.com/bluesky-social/atproto/pull/3741) [`ca07871c4`](https://github.com/bluesky-social/atproto/commit/ca07871c487abc99fe7b7f8671aa8d98eb5dc4bb) Thanks [@rafaelbsky](https://github.com/rafaelbsky)! - Update reaction limit on chat lexicon
+
+## 0.14.21
+
+### Patch Changes
+
+- [#3724](https://github.com/bluesky-social/atproto/pull/3724) [`8b7bf7e8f`](https://github.com/bluesky-social/atproto/commit/8b7bf7e8f0e5447c68633a87a2a3cff99f9e7e1c) Thanks [@haileyok](https://github.com/haileyok)! - Return `ProfileView` from `getSuggestedUsers` unspecced endpoint
+
+## 0.14.20
+
+### Patch Changes
+
+- [#3713](https://github.com/bluesky-social/atproto/pull/3713) [`0e681d303`](https://github.com/bluesky-social/atproto/commit/0e681d3036fd0b35c6d2198638392051b2ce4c81) Thanks [@haileyok](https://github.com/haileyok)! - add `getSuggestedUsers` and `getSuggestedUsersSkeleton`
+
+## 0.14.19
+
+### Patch Changes
+
+- [#3680](https://github.com/bluesky-social/atproto/pull/3680) [`efb302db1`](https://github.com/bluesky-social/atproto/commit/efb302db1a615b68795c725a22489dbd0400e011) Thanks [@haileyok](https://github.com/haileyok)! - Add unspecced `getSuggestedFeeds` and associated types
+
+- Updated dependencies [[`4db923ca1`](https://github.com/bluesky-social/atproto/commit/4db923ca1c4fadd31d41c851933659e5186ee144)]:
+  - @atproto/common-web@0.4.1
+  - @atproto/lexicon@0.4.10
+  - @atproto/xrpc@0.6.12
+
 ## 0.14.18
 
 ### Patch Changes

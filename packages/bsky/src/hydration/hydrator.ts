@@ -46,6 +46,7 @@ import {
   RelationshipPair,
   StarterPackAggs,
   StarterPacks,
+  Verifications,
 } from './graph'
 import {
   LabelHydrator,
@@ -71,6 +72,11 @@ export class HydrateCtx {
   includeActorTakedowns = this.vals.includeActorTakedowns
   include3pBlocks = this.vals.include3pBlocks
   constructor(private vals: HydrateCtxVals) {}
+  // Convenience with use with dataplane.getActors cache control
+  get skipCacheForViewer() {
+    if (!this.viewer) return
+    return [this.viewer]
+  }
   copy<V extends Partial<HydrateCtxVals>>(vals?: V): HydrateCtx & V {
     return new HydrateCtx({ ...this.vals, ...vals }) as HydrateCtx & V
   }
@@ -116,6 +122,7 @@ export type HydrationState = {
   labelerAggs?: LabelerAggs
   knownFollowers?: KnownFollowers
   bidirectionalBlocks?: BidirectionalBlocks
+  verifications?: Verifications
 }
 
 export type PostBlock = { embed: boolean; parent: boolean; root: boolean }
@@ -191,7 +198,10 @@ export class Hydrator {
   ): Promise<HydrationState> {
     const includeTakedowns = ctx.includeTakedowns || ctx.includeActorTakedowns
     const [actors, labels, profileViewersState] = await Promise.all([
-      this.actor.getActors(dids, includeTakedowns),
+      this.actor.getActors(dids, {
+        includeTakedowns,
+        skipCacheForDids: ctx.skipCacheForViewer,
+      }),
       this.label.getLabelsForSubjects(labelSubjectsForDid(dids), ctx.labelers),
       this.hydrateProfileViewers(dids, ctx),
     ])
@@ -304,7 +314,10 @@ export class Hydrator {
         [...uris, ...includeAuthorDids],
         ctx.labelers,
       ),
-      this.actor.getActors(includeAuthorDids, ctx.includeTakedowns),
+      this.actor.getActors(includeAuthorDids, {
+        includeTakedowns: ctx.includeTakedowns,
+        skipCacheForDids: ctx.skipCacheForViewer,
+      }),
     ])
 
     if (!ctx.includeTakedowns) {
@@ -865,15 +878,24 @@ export class Hydrator {
     const likeUris = collections.get(ids.AppBskyFeedLike) ?? []
     const repostUris = collections.get(ids.AppBskyFeedRepost) ?? []
     const followUris = collections.get(ids.AppBskyGraphFollow) ?? []
-    const [posts, likes, reposts, follows, labels, profileState] =
-      await Promise.all([
-        this.feed.getPosts(postUris), // reason: mention, reply, quote
-        this.feed.getLikes(likeUris), // reason: like
-        this.feed.getReposts(repostUris), // reason: repost
-        this.graph.getFollows(followUris), // reason: follow
-        this.label.getLabelsForSubjects(uris, ctx.labelers),
-        this.hydrateProfiles(uris.map(didFromUri), ctx),
-      ])
+    const verificationUris = collections.get(ids.AppBskyGraphVerification) ?? []
+    const [
+      posts,
+      likes,
+      reposts,
+      follows,
+      verifications,
+      labels,
+      profileState,
+    ] = await Promise.all([
+      this.feed.getPosts(postUris), // reason: mention, reply, quote
+      this.feed.getLikes(likeUris), // reason: like
+      this.feed.getReposts(repostUris), // reason: repost
+      this.graph.getFollows(followUris), // reason: follow
+      this.graph.getVerifications(verificationUris), // reason: verified
+      this.label.getLabelsForSubjects(uris, ctx.labelers),
+      this.hydrateProfiles(uris.map(didFromUri), ctx),
+    ])
     const viewerRootPostUris = new Set<string>()
     for (const notif of notifs) {
       if (notif.reason === 'reply') {
@@ -895,6 +917,7 @@ export class Hydrator {
       likes,
       reposts,
       follows,
+      verifications,
       labels,
       threadgates,
       ctx,
@@ -949,10 +972,7 @@ export class Hydrator {
       }
     }
 
-    const activeListAuthors = await this.actor.getActors(
-      [...listAuthorDids],
-      false,
-    )
+    const activeListAuthors = await this.actor.getActors([...listAuthorDids])
 
     for (const [source, targets] of didMap) {
       const didBlocks = new HydrationMap<boolean>()
@@ -1075,9 +1095,9 @@ export class Hydrator {
       )
     } else if (collection === ids.AppBskyActorProfile) {
       const did = parsed.hostname
-      const actor = (await this.actor.getActors([did], includeTakedowns)).get(
-        did,
-      )
+      const actor = (
+        await this.actor.getActors([did], { includeTakedowns })
+      ).get(did)
       if (!actor?.profile || !actor?.profileCid) return undefined
       const recordInfo: RecordInfo<ProfileRecord> = {
         record: actor.profile,
@@ -1097,10 +1117,9 @@ export class Hydrator {
     const nonServiceLabelers = labelers.filter(
       (did) => !this.serviceLabelers.has(did),
     )
-    const labelerActors = await this.actor.getActors(
-      nonServiceLabelers,
-      vals.includeTakedowns,
-    )
+    const labelerActors = await this.actor.getActors(nonServiceLabelers, {
+      includeTakedowns: vals.includeTakedowns,
+    })
     const availableDids = labelers.filter(
       (did) => this.serviceLabelers.has(did) || !!labelerActors.get(did),
     )
@@ -1290,6 +1309,7 @@ export const mergeStates = (
       stateA.bidirectionalBlocks,
       stateB.bidirectionalBlocks,
     ),
+    verifications: mergeMaps(stateA.verifications, stateB.verifications),
   }
 }
 
