@@ -1,7 +1,7 @@
 /**
  * GENERATED CODE - DO NOT MODIFY
  */
-import express from 'express'
+import { HeadersMap, XRPCError } from '@atproto/xrpc'
 import { type ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { validate as _validate } from '../../../../lexicons'
@@ -10,7 +10,6 @@ import {
   is$typed as _is$typed,
   type OmitKey,
 } from '../../../../util'
-import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
 import type * as AppBskyFeedDefs from './defs.js'
 
 const is$typed = _is$typed,
@@ -21,7 +20,7 @@ export interface QueryParams {
   /** Search query string; syntax, phrase, boolean, and faceting is unspecified, but Lucene query syntax is recommended. */
   q: string
   /** Specifies the ranking order of results. */
-  sort: 'top' | 'latest' | (string & {})
+  sort?: 'top' | 'latest' | (string & {})
   /** Filter results for posts after the indicated datetime (inclusive). Expected to use 'sortAt' timestamp, which may not match 'createdAt'. Can be a datetime, or just an ISO date (YYYY-MM-DD). */
   since?: string
   /** Filter results for posts before the indicated datetime (not inclusive). Expected to use 'sortAt' timestamp, which may not match 'createdAt'. Can be a datetime, or just an ISO date (YYY-MM-DD). */
@@ -38,7 +37,7 @@ export interface QueryParams {
   url?: string
   /** Filter to posts with the given tag (hashtag), based on rich-text facet or tag field. Do not include the hash (#) prefix. Multiple tags can be specified, with 'AND' matching. */
   tag?: string[]
-  limit: number
+  limit?: number
   /** Optional pagination mechanism; may not necessarily allow scrolling through entire result set. */
   cursor?: string
 }
@@ -52,29 +51,27 @@ export interface OutputSchema {
   posts: AppBskyFeedDefs.PostView[]
 }
 
-export type HandlerInput = undefined
-
-export interface HandlerSuccess {
-  encoding: 'application/json'
-  body: OutputSchema
-  headers?: { [key: string]: string }
+export interface CallOptions {
+  signal?: AbortSignal
+  headers?: HeadersMap
 }
 
-export interface HandlerError {
-  status: number
-  message?: string
-  error?: 'BadQueryString'
+export interface Response {
+  success: boolean
+  headers: HeadersMap
+  data: OutputSchema
 }
 
-export type HandlerOutput = HandlerError | HandlerSuccess | HandlerPipeThrough
-export type HandlerReqCtx<HA extends HandlerAuth = never> = {
-  auth: HA
-  params: QueryParams
-  input: HandlerInput
-  req: express.Request
-  res: express.Response
-  resetRouteRateLimits: () => Promise<void>
+export class BadQueryStringError extends XRPCError {
+  constructor(src: XRPCError) {
+    super(src.status, src.error, src.message, src.headers, { cause: src })
+  }
 }
-export type Handler<HA extends HandlerAuth = never> = (
-  ctx: HandlerReqCtx<HA>,
-) => Promise<HandlerOutput> | HandlerOutput
+
+export function toKnownErr(e: any) {
+  if (e instanceof XRPCError) {
+    if (e.error === 'BadQueryString') return new BadQueryStringError(e)
+  }
+
+  return e
+}
