@@ -1,7 +1,6 @@
 /**
  * GENERATED CODE - DO NOT MODIFY
  */
-import { HeadersMap, XRPCError } from '@atproto/xrpc'
 import { type ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { validate as _validate } from '../../../../lexicons'
@@ -10,10 +9,36 @@ import {
   is$typed as _is$typed,
   type OmitKey,
 } from '../../../../util'
+import { HandlerAuth, ErrorFrame } from '@atproto/xrpc-server'
+import { IncomingMessage } from 'node:http'
 
 const is$typed = _is$typed,
   validate = _validate
 const id = 'com.atproto.sync.subscribeRepos'
+
+export interface QueryParams {
+  /** The last known event seq number to backfill from. */
+  cursor?: number
+}
+
+export type OutputSchema =
+  | $Typed<Commit>
+  | $Typed<Sync>
+  | $Typed<Identity>
+  | $Typed<Account>
+  | $Typed<Info>
+  | { $type: string }
+export type HandlerError = ErrorFrame<'FutureCursor' | 'ConsumerTooSlow'>
+export type HandlerOutput = HandlerError | OutputSchema
+export type HandlerReqCtx<HA extends HandlerAuth = never> = {
+  auth: HA
+  params: QueryParams
+  req: IncomingMessage
+  signal: AbortSignal
+}
+export type Handler<HA extends HandlerAuth = never> = (
+  ctx: HandlerReqCtx<HA>,
+) => AsyncIterable<HandlerOutput>
 
 /** Represents an update of repository state. Note that empty commits are allowed, which include no repo data changes, but an update to rev and signature. */
 export interface Commit {
