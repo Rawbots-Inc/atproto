@@ -2,139 +2,13 @@
  * GENERATED CODE - DO NOT MODIFY
  */
 import {
-  XrpcClient,
-  type FetchHandler,
-  type FetchHandlerOptions,
-} from '@atproto/xrpc'
+  createServer as createXrpcServer,
+  Server as XrpcServer,
+  type Options as XrpcOptions,
+  type AuthVerifier,
+  type StreamAuthVerifier,
+} from '@atproto/xrpc-server'
 import { schemas } from './lexicons.js'
-import { CID } from 'multiformats/cid'
-import { type OmitKey, type Un$Typed } from './util.js'
-import * as AppBskyActorDefs from './types/app/bsky/actor/defs.js'
-import * as AppBskyActorGetPreferences from './types/app/bsky/actor/getPreferences.js'
-import * as AppBskyActorGetProfile from './types/app/bsky/actor/getProfile.js'
-import * as AppBskyActorGetProfiles from './types/app/bsky/actor/getProfiles.js'
-import * as AppBskyActorGetSuggestions from './types/app/bsky/actor/getSuggestions.js'
-import * as AppBskyActorProfile from './types/app/bsky/actor/profile.js'
-import * as AppBskyActorPutPreferences from './types/app/bsky/actor/putPreferences.js'
-import * as AppBskyActorSearchActors from './types/app/bsky/actor/searchActors.js'
-import * as AppBskyActorSearchActorsTypeahead from './types/app/bsky/actor/searchActorsTypeahead.js'
-import * as AppBskyEmbedDefs from './types/app/bsky/embed/defs.js'
-import * as AppBskyEmbedExternal from './types/app/bsky/embed/external.js'
-import * as AppBskyEmbedImages from './types/app/bsky/embed/images.js'
-import * as AppBskyEmbedRecord from './types/app/bsky/embed/record.js'
-import * as AppBskyEmbedRecordWithMedia from './types/app/bsky/embed/recordWithMedia.js'
-import * as AppBskyEmbedVideo from './types/app/bsky/embed/video.js'
-import * as AppBskyFeedDefs from './types/app/bsky/feed/defs.js'
-import * as AppBskyFeedDescribeFeedGenerator from './types/app/bsky/feed/describeFeedGenerator.js'
-import * as AppBskyFeedGenerator from './types/app/bsky/feed/generator.js'
-import * as AppBskyFeedGetActorFeeds from './types/app/bsky/feed/getActorFeeds.js'
-import * as AppBskyFeedGetActorLikes from './types/app/bsky/feed/getActorLikes.js'
-import * as AppBskyFeedGetAuthorFeed from './types/app/bsky/feed/getAuthorFeed.js'
-import * as AppBskyFeedGetFeed from './types/app/bsky/feed/getFeed.js'
-import * as AppBskyFeedGetFeedGenerator from './types/app/bsky/feed/getFeedGenerator.js'
-import * as AppBskyFeedGetFeedGenerators from './types/app/bsky/feed/getFeedGenerators.js'
-import * as AppBskyFeedGetFeedSkeleton from './types/app/bsky/feed/getFeedSkeleton.js'
-import * as AppBskyFeedGetLikes from './types/app/bsky/feed/getLikes.js'
-import * as AppBskyFeedGetListFeed from './types/app/bsky/feed/getListFeed.js'
-import * as AppBskyFeedGetPostThread from './types/app/bsky/feed/getPostThread.js'
-import * as AppBskyFeedGetPosts from './types/app/bsky/feed/getPosts.js'
-import * as AppBskyFeedGetQuotes from './types/app/bsky/feed/getQuotes.js'
-import * as AppBskyFeedGetRepostedBy from './types/app/bsky/feed/getRepostedBy.js'
-import * as AppBskyFeedGetSuggestedFeeds from './types/app/bsky/feed/getSuggestedFeeds.js'
-import * as AppBskyFeedGetTimeline from './types/app/bsky/feed/getTimeline.js'
-import * as AppBskyFeedLike from './types/app/bsky/feed/like.js'
-import * as AppBskyFeedPost from './types/app/bsky/feed/post.js'
-import * as AppBskyFeedPostgate from './types/app/bsky/feed/postgate.js'
-import * as AppBskyFeedRepost from './types/app/bsky/feed/repost.js'
-import * as AppBskyFeedSearchPosts from './types/app/bsky/feed/searchPosts.js'
-import * as AppBskyFeedSendInteractions from './types/app/bsky/feed/sendInteractions.js'
-import * as AppBskyFeedThreadgate from './types/app/bsky/feed/threadgate.js'
-import * as AppBskyGraphBlock from './types/app/bsky/graph/block.js'
-import * as AppBskyGraphDefs from './types/app/bsky/graph/defs.js'
-import * as AppBskyGraphFollow from './types/app/bsky/graph/follow.js'
-import * as AppBskyGraphGetActorStarterPacks from './types/app/bsky/graph/getActorStarterPacks.js'
-import * as AppBskyGraphGetBlocks from './types/app/bsky/graph/getBlocks.js'
-import * as AppBskyGraphGetFollowers from './types/app/bsky/graph/getFollowers.js'
-import * as AppBskyGraphGetFollows from './types/app/bsky/graph/getFollows.js'
-import * as AppBskyGraphGetKnownFollowers from './types/app/bsky/graph/getKnownFollowers.js'
-import * as AppBskyGraphGetList from './types/app/bsky/graph/getList.js'
-import * as AppBskyGraphGetListBlocks from './types/app/bsky/graph/getListBlocks.js'
-import * as AppBskyGraphGetListMutes from './types/app/bsky/graph/getListMutes.js'
-import * as AppBskyGraphGetLists from './types/app/bsky/graph/getLists.js'
-import * as AppBskyGraphGetMutes from './types/app/bsky/graph/getMutes.js'
-import * as AppBskyGraphGetRelationships from './types/app/bsky/graph/getRelationships.js'
-import * as AppBskyGraphGetStarterPack from './types/app/bsky/graph/getStarterPack.js'
-import * as AppBskyGraphGetStarterPacks from './types/app/bsky/graph/getStarterPacks.js'
-import * as AppBskyGraphGetSuggestedFollowsByActor from './types/app/bsky/graph/getSuggestedFollowsByActor.js'
-import * as AppBskyGraphList from './types/app/bsky/graph/list.js'
-import * as AppBskyGraphListblock from './types/app/bsky/graph/listblock.js'
-import * as AppBskyGraphListitem from './types/app/bsky/graph/listitem.js'
-import * as AppBskyGraphMuteActor from './types/app/bsky/graph/muteActor.js'
-import * as AppBskyGraphMuteActorList from './types/app/bsky/graph/muteActorList.js'
-import * as AppBskyGraphMuteThread from './types/app/bsky/graph/muteThread.js'
-import * as AppBskyGraphSearchStarterPacks from './types/app/bsky/graph/searchStarterPacks.js'
-import * as AppBskyGraphStarterpack from './types/app/bsky/graph/starterpack.js'
-import * as AppBskyGraphUnmuteActor from './types/app/bsky/graph/unmuteActor.js'
-import * as AppBskyGraphUnmuteActorList from './types/app/bsky/graph/unmuteActorList.js'
-import * as AppBskyGraphUnmuteThread from './types/app/bsky/graph/unmuteThread.js'
-import * as AppBskyGraphVerification from './types/app/bsky/graph/verification.js'
-import * as AppBskyLabelerDefs from './types/app/bsky/labeler/defs.js'
-import * as AppBskyLabelerGetServices from './types/app/bsky/labeler/getServices.js'
-import * as AppBskyLabelerService from './types/app/bsky/labeler/service.js'
-import * as AppBskyNotificationDefs from './types/app/bsky/notification/defs.js'
-import * as AppBskyNotificationGetUnreadCount from './types/app/bsky/notification/getUnreadCount.js'
-import * as AppBskyNotificationListNotifications from './types/app/bsky/notification/listNotifications.js'
-import * as AppBskyNotificationPutPreferences from './types/app/bsky/notification/putPreferences.js'
-import * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/registerPush.js'
-import * as AppBskyNotificationUpdateSeen from './types/app/bsky/notification/updateSeen.js'
-import * as AppBskyRichtextFacet from './types/app/bsky/richtext/facet.js'
-import * as AppBskyUnspeccedDefs from './types/app/bsky/unspecced/defs.js'
-import * as AppBskyUnspeccedGetConfig from './types/app/bsky/unspecced/getConfig.js'
-import * as AppBskyUnspeccedGetPopularFeedGenerators from './types/app/bsky/unspecced/getPopularFeedGenerators.js'
-import * as AppBskyUnspeccedGetSuggestedFeeds from './types/app/bsky/unspecced/getSuggestedFeeds.js'
-import * as AppBskyUnspeccedGetSuggestedFeedsSkeleton from './types/app/bsky/unspecced/getSuggestedFeedsSkeleton.js'
-import * as AppBskyUnspeccedGetSuggestedStarterPacks from './types/app/bsky/unspecced/getSuggestedStarterPacks.js'
-import * as AppBskyUnspeccedGetSuggestedStarterPacksSkeleton from './types/app/bsky/unspecced/getSuggestedStarterPacksSkeleton.js'
-import * as AppBskyUnspeccedGetSuggestedUsers from './types/app/bsky/unspecced/getSuggestedUsers.js'
-import * as AppBskyUnspeccedGetSuggestedUsersSkeleton from './types/app/bsky/unspecced/getSuggestedUsersSkeleton.js'
-import * as AppBskyUnspeccedGetSuggestionsSkeleton from './types/app/bsky/unspecced/getSuggestionsSkeleton.js'
-import * as AppBskyUnspeccedGetTaggedSuggestions from './types/app/bsky/unspecced/getTaggedSuggestions.js'
-import * as AppBskyUnspeccedGetTrendingTopics from './types/app/bsky/unspecced/getTrendingTopics.js'
-import * as AppBskyUnspeccedGetTrends from './types/app/bsky/unspecced/getTrends.js'
-import * as AppBskyUnspeccedGetTrendsSkeleton from './types/app/bsky/unspecced/getTrendsSkeleton.js'
-import * as AppBskyUnspeccedSearchActorsSkeleton from './types/app/bsky/unspecced/searchActorsSkeleton.js'
-import * as AppBskyUnspeccedSearchPostsSkeleton from './types/app/bsky/unspecced/searchPostsSkeleton.js'
-import * as AppBskyUnspeccedSearchStarterPacksSkeleton from './types/app/bsky/unspecced/searchStarterPacksSkeleton.js'
-import * as AppBskyVideoDefs from './types/app/bsky/video/defs.js'
-import * as AppBskyVideoGetJobStatus from './types/app/bsky/video/getJobStatus.js'
-import * as AppBskyVideoGetUploadLimits from './types/app/bsky/video/getUploadLimits.js'
-import * as AppBskyVideoUploadVideo from './types/app/bsky/video/uploadVideo.js'
-import * as ChatBskyActorDeclaration from './types/chat/bsky/actor/declaration.js'
-import * as ChatBskyActorDefs from './types/chat/bsky/actor/defs.js'
-import * as ChatBskyActorDeleteAccount from './types/chat/bsky/actor/deleteAccount.js'
-import * as ChatBskyActorExportAccountData from './types/chat/bsky/actor/exportAccountData.js'
-import * as ChatBskyConvoAcceptConvo from './types/chat/bsky/convo/acceptConvo.js'
-import * as ChatBskyConvoAddReaction from './types/chat/bsky/convo/addReaction.js'
-import * as ChatBskyConvoDefs from './types/chat/bsky/convo/defs.js'
-import * as ChatBskyConvoDeleteMessageForSelf from './types/chat/bsky/convo/deleteMessageForSelf.js'
-import * as ChatBskyConvoGetConvo from './types/chat/bsky/convo/getConvo.js'
-import * as ChatBskyConvoGetConvoAvailability from './types/chat/bsky/convo/getConvoAvailability.js'
-import * as ChatBskyConvoGetConvoForMembers from './types/chat/bsky/convo/getConvoForMembers.js'
-import * as ChatBskyConvoGetLog from './types/chat/bsky/convo/getLog.js'
-import * as ChatBskyConvoGetMessages from './types/chat/bsky/convo/getMessages.js'
-import * as ChatBskyConvoLeaveConvo from './types/chat/bsky/convo/leaveConvo.js'
-import * as ChatBskyConvoListConvos from './types/chat/bsky/convo/listConvos.js'
-import * as ChatBskyConvoMuteConvo from './types/chat/bsky/convo/muteConvo.js'
-import * as ChatBskyConvoRemoveReaction from './types/chat/bsky/convo/removeReaction.js'
-import * as ChatBskyConvoSendMessage from './types/chat/bsky/convo/sendMessage.js'
-import * as ChatBskyConvoSendMessageBatch from './types/chat/bsky/convo/sendMessageBatch.js'
-import * as ChatBskyConvoUnmuteConvo from './types/chat/bsky/convo/unmuteConvo.js'
-import * as ChatBskyConvoUpdateAllRead from './types/chat/bsky/convo/updateAllRead.js'
-import * as ChatBskyConvoUpdateRead from './types/chat/bsky/convo/updateRead.js'
-import * as ChatBskyModerationGetActorMetadata from './types/chat/bsky/moderation/getActorMetadata.js'
-import * as ChatBskyModerationGetMessageContext from './types/chat/bsky/moderation/getMessageContext.js'
-import * as ChatBskyModerationUpdateActorAccess from './types/chat/bsky/moderation/updateActorAccess.js'
-import * as ComAtprotoAdminDefs from './types/com/atproto/admin/defs.js'
 import * as ComAtprotoAdminDeleteAccount from './types/com/atproto/admin/deleteAccount.js'
 import * as ComAtprotoAdminDisableAccountInvites from './types/com/atproto/admin/disableAccountInvites.js'
 import * as ComAtprotoAdminDisableInviteCodes from './types/com/atproto/admin/disableInviteCodes.js'
@@ -150,7 +24,6 @@ import * as ComAtprotoAdminUpdateAccountHandle from './types/com/atproto/admin/u
 import * as ComAtprotoAdminUpdateAccountPassword from './types/com/atproto/admin/updateAccountPassword.js'
 import * as ComAtprotoAdminUpdateAccountSigningKey from './types/com/atproto/admin/updateAccountSigningKey.js'
 import * as ComAtprotoAdminUpdateSubjectStatus from './types/com/atproto/admin/updateSubjectStatus.js'
-import * as ComAtprotoIdentityDefs from './types/com/atproto/identity/defs.js'
 import * as ComAtprotoIdentityGetRecommendedDidCredentials from './types/com/atproto/identity/getRecommendedDidCredentials.js'
 import * as ComAtprotoIdentityRefreshIdentity from './types/com/atproto/identity/refreshIdentity.js'
 import * as ComAtprotoIdentityRequestPlcOperationSignature from './types/com/atproto/identity/requestPlcOperationSignature.js'
@@ -160,15 +33,11 @@ import * as ComAtprotoIdentityResolveIdentity from './types/com/atproto/identity
 import * as ComAtprotoIdentitySignPlcOperation from './types/com/atproto/identity/signPlcOperation.js'
 import * as ComAtprotoIdentitySubmitPlcOperation from './types/com/atproto/identity/submitPlcOperation.js'
 import * as ComAtprotoIdentityUpdateHandle from './types/com/atproto/identity/updateHandle.js'
-import * as ComAtprotoLabelDefs from './types/com/atproto/label/defs.js'
 import * as ComAtprotoLabelQueryLabels from './types/com/atproto/label/queryLabels.js'
 import * as ComAtprotoLabelSubscribeLabels from './types/com/atproto/label/subscribeLabels.js'
-import * as ComAtprotoLexiconSchema from './types/com/atproto/lexicon/schema.js'
 import * as ComAtprotoModerationCreateReport from './types/com/atproto/moderation/createReport.js'
-import * as ComAtprotoModerationDefs from './types/com/atproto/moderation/defs.js'
 import * as ComAtprotoRepoApplyWrites from './types/com/atproto/repo/applyWrites.js'
 import * as ComAtprotoRepoCreateRecord from './types/com/atproto/repo/createRecord.js'
-import * as ComAtprotoRepoDefs from './types/com/atproto/repo/defs.js'
 import * as ComAtprotoRepoDeleteRecord from './types/com/atproto/repo/deleteRecord.js'
 import * as ComAtprotoRepoDescribeRepo from './types/com/atproto/repo/describeRepo.js'
 import * as ComAtprotoRepoGetRecord from './types/com/atproto/repo/getRecord.js'
@@ -176,7 +45,6 @@ import * as ComAtprotoRepoImportRepo from './types/com/atproto/repo/importRepo.j
 import * as ComAtprotoRepoListMissingBlobs from './types/com/atproto/repo/listMissingBlobs.js'
 import * as ComAtprotoRepoListRecords from './types/com/atproto/repo/listRecords.js'
 import * as ComAtprotoRepoPutRecord from './types/com/atproto/repo/putRecord.js'
-import * as ComAtprotoRepoStrongRef from './types/com/atproto/repo/strongRef.js'
 import * as ComAtprotoRepoUploadBlob from './types/com/atproto/repo/uploadBlob.js'
 import * as ComAtprotoServerActivateAccount from './types/com/atproto/server/activateAccount.js'
 import * as ComAtprotoServerCheckAccountStatus from './types/com/atproto/server/checkAccountStatus.js'
@@ -187,7 +55,6 @@ import * as ComAtprotoServerCreateInviteCode from './types/com/atproto/server/cr
 import * as ComAtprotoServerCreateInviteCodes from './types/com/atproto/server/createInviteCodes.js'
 import * as ComAtprotoServerCreateSession from './types/com/atproto/server/createSession.js'
 import * as ComAtprotoServerDeactivateAccount from './types/com/atproto/server/deactivateAccount.js'
-import * as ComAtprotoServerDefs from './types/com/atproto/server/defs.js'
 import * as ComAtprotoServerDeleteAccount from './types/com/atproto/server/deleteAccount.js'
 import * as ComAtprotoServerDeleteSession from './types/com/atproto/server/deleteSession.js'
 import * as ComAtprotoServerDescribeServer from './types/com/atproto/server/describeServer.js'
@@ -204,7 +71,6 @@ import * as ComAtprotoServerReserveSigningKey from './types/com/atproto/server/r
 import * as ComAtprotoServerResetPassword from './types/com/atproto/server/resetPassword.js'
 import * as ComAtprotoServerRevokeAppPassword from './types/com/atproto/server/revokeAppPassword.js'
 import * as ComAtprotoServerUpdateEmail from './types/com/atproto/server/updateEmail.js'
-import * as ComAtprotoSyncDefs from './types/com/atproto/sync/defs.js'
 import * as ComAtprotoSyncGetBlob from './types/com/atproto/sync/getBlob.js'
 import * as ComAtprotoSyncGetBlocks from './types/com/atproto/sync/getBlocks.js'
 import * as ComAtprotoSyncGetCheckout from './types/com/atproto/sync/getCheckout.js'
@@ -225,13 +91,104 @@ import * as ComAtprotoTempAddReservedHandle from './types/com/atproto/temp/addRe
 import * as ComAtprotoTempCheckSignupQueue from './types/com/atproto/temp/checkSignupQueue.js'
 import * as ComAtprotoTempFetchLabels from './types/com/atproto/temp/fetchLabels.js'
 import * as ComAtprotoTempRequestPhoneVerification from './types/com/atproto/temp/requestPhoneVerification.js'
+import * as AppBskyActorGetPreferences from './types/app/bsky/actor/getPreferences.js'
+import * as AppBskyActorGetProfile from './types/app/bsky/actor/getProfile.js'
+import * as AppBskyActorGetProfiles from './types/app/bsky/actor/getProfiles.js'
+import * as AppBskyActorGetSuggestions from './types/app/bsky/actor/getSuggestions.js'
+import * as AppBskyActorPutPreferences from './types/app/bsky/actor/putPreferences.js'
+import * as AppBskyActorSearchActors from './types/app/bsky/actor/searchActors.js'
+import * as AppBskyActorSearchActorsTypeahead from './types/app/bsky/actor/searchActorsTypeahead.js'
+import * as AppBskyFeedDescribeFeedGenerator from './types/app/bsky/feed/describeFeedGenerator.js'
+import * as AppBskyFeedGetActorFeeds from './types/app/bsky/feed/getActorFeeds.js'
+import * as AppBskyFeedGetActorLikes from './types/app/bsky/feed/getActorLikes.js'
+import * as AppBskyFeedGetAuthorFeed from './types/app/bsky/feed/getAuthorFeed.js'
+import * as AppBskyFeedGetFeed from './types/app/bsky/feed/getFeed.js'
+import * as AppBskyFeedGetFeedGenerator from './types/app/bsky/feed/getFeedGenerator.js'
+import * as AppBskyFeedGetFeedGenerators from './types/app/bsky/feed/getFeedGenerators.js'
+import * as AppBskyFeedGetFeedSkeleton from './types/app/bsky/feed/getFeedSkeleton.js'
+import * as AppBskyFeedGetLikes from './types/app/bsky/feed/getLikes.js'
+import * as AppBskyFeedGetListFeed from './types/app/bsky/feed/getListFeed.js'
+import * as AppBskyFeedGetPostThread from './types/app/bsky/feed/getPostThread.js'
+import * as AppBskyFeedGetPosts from './types/app/bsky/feed/getPosts.js'
+import * as AppBskyFeedGetQuotes from './types/app/bsky/feed/getQuotes.js'
+import * as AppBskyFeedGetRepostedBy from './types/app/bsky/feed/getRepostedBy.js'
+import * as AppBskyFeedGetSuggestedFeeds from './types/app/bsky/feed/getSuggestedFeeds.js'
+import * as AppBskyFeedGetTimeline from './types/app/bsky/feed/getTimeline.js'
+import * as AppBskyFeedSearchPosts from './types/app/bsky/feed/searchPosts.js'
+import * as AppBskyFeedSendInteractions from './types/app/bsky/feed/sendInteractions.js'
+import * as AppBskyGraphGetActorStarterPacks from './types/app/bsky/graph/getActorStarterPacks.js'
+import * as AppBskyGraphGetBlocks from './types/app/bsky/graph/getBlocks.js'
+import * as AppBskyGraphGetFollowers from './types/app/bsky/graph/getFollowers.js'
+import * as AppBskyGraphGetFollows from './types/app/bsky/graph/getFollows.js'
+import * as AppBskyGraphGetKnownFollowers from './types/app/bsky/graph/getKnownFollowers.js'
+import * as AppBskyGraphGetList from './types/app/bsky/graph/getList.js'
+import * as AppBskyGraphGetListBlocks from './types/app/bsky/graph/getListBlocks.js'
+import * as AppBskyGraphGetListMutes from './types/app/bsky/graph/getListMutes.js'
+import * as AppBskyGraphGetLists from './types/app/bsky/graph/getLists.js'
+import * as AppBskyGraphGetMutes from './types/app/bsky/graph/getMutes.js'
+import * as AppBskyGraphGetRelationships from './types/app/bsky/graph/getRelationships.js'
+import * as AppBskyGraphGetStarterPack from './types/app/bsky/graph/getStarterPack.js'
+import * as AppBskyGraphGetStarterPacks from './types/app/bsky/graph/getStarterPacks.js'
+import * as AppBskyGraphGetSuggestedFollowsByActor from './types/app/bsky/graph/getSuggestedFollowsByActor.js'
+import * as AppBskyGraphMuteActor from './types/app/bsky/graph/muteActor.js'
+import * as AppBskyGraphMuteActorList from './types/app/bsky/graph/muteActorList.js'
+import * as AppBskyGraphMuteThread from './types/app/bsky/graph/muteThread.js'
+import * as AppBskyGraphSearchStarterPacks from './types/app/bsky/graph/searchStarterPacks.js'
+import * as AppBskyGraphUnmuteActor from './types/app/bsky/graph/unmuteActor.js'
+import * as AppBskyGraphUnmuteActorList from './types/app/bsky/graph/unmuteActorList.js'
+import * as AppBskyGraphUnmuteThread from './types/app/bsky/graph/unmuteThread.js'
+import * as AppBskyLabelerGetServices from './types/app/bsky/labeler/getServices.js'
+import * as AppBskyNotificationGetUnreadCount from './types/app/bsky/notification/getUnreadCount.js'
+import * as AppBskyNotificationListNotifications from './types/app/bsky/notification/listNotifications.js'
+import * as AppBskyNotificationPutPreferences from './types/app/bsky/notification/putPreferences.js'
+import * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/registerPush.js'
+import * as AppBskyNotificationUpdateSeen from './types/app/bsky/notification/updateSeen.js'
+import * as AppBskyUnspeccedGetConfig from './types/app/bsky/unspecced/getConfig.js'
+import * as AppBskyUnspeccedGetPopularFeedGenerators from './types/app/bsky/unspecced/getPopularFeedGenerators.js'
+import * as AppBskyUnspeccedGetSuggestedFeeds from './types/app/bsky/unspecced/getSuggestedFeeds.js'
+import * as AppBskyUnspeccedGetSuggestedFeedsSkeleton from './types/app/bsky/unspecced/getSuggestedFeedsSkeleton.js'
+import * as AppBskyUnspeccedGetSuggestedStarterPacks from './types/app/bsky/unspecced/getSuggestedStarterPacks.js'
+import * as AppBskyUnspeccedGetSuggestedStarterPacksSkeleton from './types/app/bsky/unspecced/getSuggestedStarterPacksSkeleton.js'
+import * as AppBskyUnspeccedGetSuggestedUsers from './types/app/bsky/unspecced/getSuggestedUsers.js'
+import * as AppBskyUnspeccedGetSuggestedUsersSkeleton from './types/app/bsky/unspecced/getSuggestedUsersSkeleton.js'
+import * as AppBskyUnspeccedGetSuggestionsSkeleton from './types/app/bsky/unspecced/getSuggestionsSkeleton.js'
+import * as AppBskyUnspeccedGetTaggedSuggestions from './types/app/bsky/unspecced/getTaggedSuggestions.js'
+import * as AppBskyUnspeccedGetTrendingTopics from './types/app/bsky/unspecced/getTrendingTopics.js'
+import * as AppBskyUnspeccedGetTrends from './types/app/bsky/unspecced/getTrends.js'
+import * as AppBskyUnspeccedGetTrendsSkeleton from './types/app/bsky/unspecced/getTrendsSkeleton.js'
+import * as AppBskyUnspeccedSearchActorsSkeleton from './types/app/bsky/unspecced/searchActorsSkeleton.js'
+import * as AppBskyUnspeccedSearchPostsSkeleton from './types/app/bsky/unspecced/searchPostsSkeleton.js'
+import * as AppBskyUnspeccedSearchStarterPacksSkeleton from './types/app/bsky/unspecced/searchStarterPacksSkeleton.js'
+import * as AppBskyVideoGetJobStatus from './types/app/bsky/video/getJobStatus.js'
+import * as AppBskyVideoGetUploadLimits from './types/app/bsky/video/getUploadLimits.js'
+import * as AppBskyVideoUploadVideo from './types/app/bsky/video/uploadVideo.js'
+import * as ChatBskyActorDeleteAccount from './types/chat/bsky/actor/deleteAccount.js'
+import * as ChatBskyActorExportAccountData from './types/chat/bsky/actor/exportAccountData.js'
+import * as ChatBskyConvoAcceptConvo from './types/chat/bsky/convo/acceptConvo.js'
+import * as ChatBskyConvoAddReaction from './types/chat/bsky/convo/addReaction.js'
+import * as ChatBskyConvoDeleteMessageForSelf from './types/chat/bsky/convo/deleteMessageForSelf.js'
+import * as ChatBskyConvoGetConvo from './types/chat/bsky/convo/getConvo.js'
+import * as ChatBskyConvoGetConvoAvailability from './types/chat/bsky/convo/getConvoAvailability.js'
+import * as ChatBskyConvoGetConvoForMembers from './types/chat/bsky/convo/getConvoForMembers.js'
+import * as ChatBskyConvoGetLog from './types/chat/bsky/convo/getLog.js'
+import * as ChatBskyConvoGetMessages from './types/chat/bsky/convo/getMessages.js'
+import * as ChatBskyConvoLeaveConvo from './types/chat/bsky/convo/leaveConvo.js'
+import * as ChatBskyConvoListConvos from './types/chat/bsky/convo/listConvos.js'
+import * as ChatBskyConvoMuteConvo from './types/chat/bsky/convo/muteConvo.js'
+import * as ChatBskyConvoRemoveReaction from './types/chat/bsky/convo/removeReaction.js'
+import * as ChatBskyConvoSendMessage from './types/chat/bsky/convo/sendMessage.js'
+import * as ChatBskyConvoSendMessageBatch from './types/chat/bsky/convo/sendMessageBatch.js'
+import * as ChatBskyConvoUnmuteConvo from './types/chat/bsky/convo/unmuteConvo.js'
+import * as ChatBskyConvoUpdateAllRead from './types/chat/bsky/convo/updateAllRead.js'
+import * as ChatBskyConvoUpdateRead from './types/chat/bsky/convo/updateRead.js'
+import * as ChatBskyModerationGetActorMetadata from './types/chat/bsky/moderation/getActorMetadata.js'
+import * as ChatBskyModerationGetMessageContext from './types/chat/bsky/moderation/getMessageContext.js'
+import * as ChatBskyModerationUpdateActorAccess from './types/chat/bsky/moderation/updateActorAccess.js'
 import * as ToolsOzoneCommunicationCreateTemplate from './types/tools/ozone/communication/createTemplate.js'
-import * as ToolsOzoneCommunicationDefs from './types/tools/ozone/communication/defs.js'
 import * as ToolsOzoneCommunicationDeleteTemplate from './types/tools/ozone/communication/deleteTemplate.js'
 import * as ToolsOzoneCommunicationListTemplates from './types/tools/ozone/communication/listTemplates.js'
 import * as ToolsOzoneCommunicationUpdateTemplate from './types/tools/ozone/communication/updateTemplate.js'
 import * as ToolsOzoneHostingGetAccountHistory from './types/tools/ozone/hosting/getAccountHistory.js'
-import * as ToolsOzoneModerationDefs from './types/tools/ozone/moderation/defs.js'
 import * as ToolsOzoneModerationEmitEvent from './types/tools/ozone/moderation/emitEvent.js'
 import * as ToolsOzoneModerationGetEvent from './types/tools/ozone/moderation/getEvent.js'
 import * as ToolsOzoneModerationGetRecord from './types/tools/ozone/moderation/getRecord.js'
@@ -245,290 +202,34 @@ import * as ToolsOzoneModerationQueryStatuses from './types/tools/ozone/moderati
 import * as ToolsOzoneModerationSearchRepos from './types/tools/ozone/moderation/searchRepos.js'
 import * as ToolsOzoneServerGetConfig from './types/tools/ozone/server/getConfig.js'
 import * as ToolsOzoneSetAddValues from './types/tools/ozone/set/addValues.js'
-import * as ToolsOzoneSetDefs from './types/tools/ozone/set/defs.js'
 import * as ToolsOzoneSetDeleteSet from './types/tools/ozone/set/deleteSet.js'
 import * as ToolsOzoneSetDeleteValues from './types/tools/ozone/set/deleteValues.js'
 import * as ToolsOzoneSetGetValues from './types/tools/ozone/set/getValues.js'
 import * as ToolsOzoneSetQuerySets from './types/tools/ozone/set/querySets.js'
 import * as ToolsOzoneSetUpsertSet from './types/tools/ozone/set/upsertSet.js'
-import * as ToolsOzoneSettingDefs from './types/tools/ozone/setting/defs.js'
 import * as ToolsOzoneSettingListOptions from './types/tools/ozone/setting/listOptions.js'
 import * as ToolsOzoneSettingRemoveOptions from './types/tools/ozone/setting/removeOptions.js'
 import * as ToolsOzoneSettingUpsertOption from './types/tools/ozone/setting/upsertOption.js'
-import * as ToolsOzoneSignatureDefs from './types/tools/ozone/signature/defs.js'
 import * as ToolsOzoneSignatureFindCorrelation from './types/tools/ozone/signature/findCorrelation.js'
 import * as ToolsOzoneSignatureFindRelatedAccounts from './types/tools/ozone/signature/findRelatedAccounts.js'
 import * as ToolsOzoneSignatureSearchAccounts from './types/tools/ozone/signature/searchAccounts.js'
 import * as ToolsOzoneTeamAddMember from './types/tools/ozone/team/addMember.js'
-import * as ToolsOzoneTeamDefs from './types/tools/ozone/team/defs.js'
 import * as ToolsOzoneTeamDeleteMember from './types/tools/ozone/team/deleteMember.js'
 import * as ToolsOzoneTeamListMembers from './types/tools/ozone/team/listMembers.js'
 import * as ToolsOzoneTeamUpdateMember from './types/tools/ozone/team/updateMember.js'
-import * as ToolsOzoneVerificationDefs from './types/tools/ozone/verification/defs.js'
 import * as ToolsOzoneVerificationGrantVerifications from './types/tools/ozone/verification/grantVerifications.js'
 import * as ToolsOzoneVerificationListVerifications from './types/tools/ozone/verification/listVerifications.js'
 import * as ToolsOzoneVerificationRevokeVerifications from './types/tools/ozone/verification/revokeVerifications.js'
 
-export * as AppBskyActorDefs from './types/app/bsky/actor/defs.js'
-export * as AppBskyActorGetPreferences from './types/app/bsky/actor/getPreferences.js'
-export * as AppBskyActorGetProfile from './types/app/bsky/actor/getProfile.js'
-export * as AppBskyActorGetProfiles from './types/app/bsky/actor/getProfiles.js'
-export * as AppBskyActorGetSuggestions from './types/app/bsky/actor/getSuggestions.js'
-export * as AppBskyActorProfile from './types/app/bsky/actor/profile.js'
-export * as AppBskyActorPutPreferences from './types/app/bsky/actor/putPreferences.js'
-export * as AppBskyActorSearchActors from './types/app/bsky/actor/searchActors.js'
-export * as AppBskyActorSearchActorsTypeahead from './types/app/bsky/actor/searchActorsTypeahead.js'
-export * as AppBskyEmbedDefs from './types/app/bsky/embed/defs.js'
-export * as AppBskyEmbedExternal from './types/app/bsky/embed/external.js'
-export * as AppBskyEmbedImages from './types/app/bsky/embed/images.js'
-export * as AppBskyEmbedRecord from './types/app/bsky/embed/record.js'
-export * as AppBskyEmbedRecordWithMedia from './types/app/bsky/embed/recordWithMedia.js'
-export * as AppBskyEmbedVideo from './types/app/bsky/embed/video.js'
-export * as AppBskyFeedDefs from './types/app/bsky/feed/defs.js'
-export * as AppBskyFeedDescribeFeedGenerator from './types/app/bsky/feed/describeFeedGenerator.js'
-export * as AppBskyFeedGenerator from './types/app/bsky/feed/generator.js'
-export * as AppBskyFeedGetActorFeeds from './types/app/bsky/feed/getActorFeeds.js'
-export * as AppBskyFeedGetActorLikes from './types/app/bsky/feed/getActorLikes.js'
-export * as AppBskyFeedGetAuthorFeed from './types/app/bsky/feed/getAuthorFeed.js'
-export * as AppBskyFeedGetFeed from './types/app/bsky/feed/getFeed.js'
-export * as AppBskyFeedGetFeedGenerator from './types/app/bsky/feed/getFeedGenerator.js'
-export * as AppBskyFeedGetFeedGenerators from './types/app/bsky/feed/getFeedGenerators.js'
-export * as AppBskyFeedGetFeedSkeleton from './types/app/bsky/feed/getFeedSkeleton.js'
-export * as AppBskyFeedGetLikes from './types/app/bsky/feed/getLikes.js'
-export * as AppBskyFeedGetListFeed from './types/app/bsky/feed/getListFeed.js'
-export * as AppBskyFeedGetPostThread from './types/app/bsky/feed/getPostThread.js'
-export * as AppBskyFeedGetPosts from './types/app/bsky/feed/getPosts.js'
-export * as AppBskyFeedGetQuotes from './types/app/bsky/feed/getQuotes.js'
-export * as AppBskyFeedGetRepostedBy from './types/app/bsky/feed/getRepostedBy.js'
-export * as AppBskyFeedGetSuggestedFeeds from './types/app/bsky/feed/getSuggestedFeeds.js'
-export * as AppBskyFeedGetTimeline from './types/app/bsky/feed/getTimeline.js'
-export * as AppBskyFeedLike from './types/app/bsky/feed/like.js'
-export * as AppBskyFeedPost from './types/app/bsky/feed/post.js'
-export * as AppBskyFeedPostgate from './types/app/bsky/feed/postgate.js'
-export * as AppBskyFeedRepost from './types/app/bsky/feed/repost.js'
-export * as AppBskyFeedSearchPosts from './types/app/bsky/feed/searchPosts.js'
-export * as AppBskyFeedSendInteractions from './types/app/bsky/feed/sendInteractions.js'
-export * as AppBskyFeedThreadgate from './types/app/bsky/feed/threadgate.js'
-export * as AppBskyGraphBlock from './types/app/bsky/graph/block.js'
-export * as AppBskyGraphDefs from './types/app/bsky/graph/defs.js'
-export * as AppBskyGraphFollow from './types/app/bsky/graph/follow.js'
-export * as AppBskyGraphGetActorStarterPacks from './types/app/bsky/graph/getActorStarterPacks.js'
-export * as AppBskyGraphGetBlocks from './types/app/bsky/graph/getBlocks.js'
-export * as AppBskyGraphGetFollowers from './types/app/bsky/graph/getFollowers.js'
-export * as AppBskyGraphGetFollows from './types/app/bsky/graph/getFollows.js'
-export * as AppBskyGraphGetKnownFollowers from './types/app/bsky/graph/getKnownFollowers.js'
-export * as AppBskyGraphGetList from './types/app/bsky/graph/getList.js'
-export * as AppBskyGraphGetListBlocks from './types/app/bsky/graph/getListBlocks.js'
-export * as AppBskyGraphGetListMutes from './types/app/bsky/graph/getListMutes.js'
-export * as AppBskyGraphGetLists from './types/app/bsky/graph/getLists.js'
-export * as AppBskyGraphGetMutes from './types/app/bsky/graph/getMutes.js'
-export * as AppBskyGraphGetRelationships from './types/app/bsky/graph/getRelationships.js'
-export * as AppBskyGraphGetStarterPack from './types/app/bsky/graph/getStarterPack.js'
-export * as AppBskyGraphGetStarterPacks from './types/app/bsky/graph/getStarterPacks.js'
-export * as AppBskyGraphGetSuggestedFollowsByActor from './types/app/bsky/graph/getSuggestedFollowsByActor.js'
-export * as AppBskyGraphList from './types/app/bsky/graph/list.js'
-export * as AppBskyGraphListblock from './types/app/bsky/graph/listblock.js'
-export * as AppBskyGraphListitem from './types/app/bsky/graph/listitem.js'
-export * as AppBskyGraphMuteActor from './types/app/bsky/graph/muteActor.js'
-export * as AppBskyGraphMuteActorList from './types/app/bsky/graph/muteActorList.js'
-export * as AppBskyGraphMuteThread from './types/app/bsky/graph/muteThread.js'
-export * as AppBskyGraphSearchStarterPacks from './types/app/bsky/graph/searchStarterPacks.js'
-export * as AppBskyGraphStarterpack from './types/app/bsky/graph/starterpack.js'
-export * as AppBskyGraphUnmuteActor from './types/app/bsky/graph/unmuteActor.js'
-export * as AppBskyGraphUnmuteActorList from './types/app/bsky/graph/unmuteActorList.js'
-export * as AppBskyGraphUnmuteThread from './types/app/bsky/graph/unmuteThread.js'
-export * as AppBskyGraphVerification from './types/app/bsky/graph/verification.js'
-export * as AppBskyLabelerDefs from './types/app/bsky/labeler/defs.js'
-export * as AppBskyLabelerGetServices from './types/app/bsky/labeler/getServices.js'
-export * as AppBskyLabelerService from './types/app/bsky/labeler/service.js'
-export * as AppBskyNotificationDefs from './types/app/bsky/notification/defs.js'
-export * as AppBskyNotificationGetUnreadCount from './types/app/bsky/notification/getUnreadCount.js'
-export * as AppBskyNotificationListNotifications from './types/app/bsky/notification/listNotifications.js'
-export * as AppBskyNotificationPutPreferences from './types/app/bsky/notification/putPreferences.js'
-export * as AppBskyNotificationRegisterPush from './types/app/bsky/notification/registerPush.js'
-export * as AppBskyNotificationUpdateSeen from './types/app/bsky/notification/updateSeen.js'
-export * as AppBskyRichtextFacet from './types/app/bsky/richtext/facet.js'
-export * as AppBskyUnspeccedDefs from './types/app/bsky/unspecced/defs.js'
-export * as AppBskyUnspeccedGetConfig from './types/app/bsky/unspecced/getConfig.js'
-export * as AppBskyUnspeccedGetPopularFeedGenerators from './types/app/bsky/unspecced/getPopularFeedGenerators.js'
-export * as AppBskyUnspeccedGetSuggestedFeeds from './types/app/bsky/unspecced/getSuggestedFeeds.js'
-export * as AppBskyUnspeccedGetSuggestedFeedsSkeleton from './types/app/bsky/unspecced/getSuggestedFeedsSkeleton.js'
-export * as AppBskyUnspeccedGetSuggestedStarterPacks from './types/app/bsky/unspecced/getSuggestedStarterPacks.js'
-export * as AppBskyUnspeccedGetSuggestedStarterPacksSkeleton from './types/app/bsky/unspecced/getSuggestedStarterPacksSkeleton.js'
-export * as AppBskyUnspeccedGetSuggestedUsers from './types/app/bsky/unspecced/getSuggestedUsers.js'
-export * as AppBskyUnspeccedGetSuggestedUsersSkeleton from './types/app/bsky/unspecced/getSuggestedUsersSkeleton.js'
-export * as AppBskyUnspeccedGetSuggestionsSkeleton from './types/app/bsky/unspecced/getSuggestionsSkeleton.js'
-export * as AppBskyUnspeccedGetTaggedSuggestions from './types/app/bsky/unspecced/getTaggedSuggestions.js'
-export * as AppBskyUnspeccedGetTrendingTopics from './types/app/bsky/unspecced/getTrendingTopics.js'
-export * as AppBskyUnspeccedGetTrends from './types/app/bsky/unspecced/getTrends.js'
-export * as AppBskyUnspeccedGetTrendsSkeleton from './types/app/bsky/unspecced/getTrendsSkeleton.js'
-export * as AppBskyUnspeccedSearchActorsSkeleton from './types/app/bsky/unspecced/searchActorsSkeleton.js'
-export * as AppBskyUnspeccedSearchPostsSkeleton from './types/app/bsky/unspecced/searchPostsSkeleton.js'
-export * as AppBskyUnspeccedSearchStarterPacksSkeleton from './types/app/bsky/unspecced/searchStarterPacksSkeleton.js'
-export * as AppBskyVideoDefs from './types/app/bsky/video/defs.js'
-export * as AppBskyVideoGetJobStatus from './types/app/bsky/video/getJobStatus.js'
-export * as AppBskyVideoGetUploadLimits from './types/app/bsky/video/getUploadLimits.js'
-export * as AppBskyVideoUploadVideo from './types/app/bsky/video/uploadVideo.js'
-export * as ChatBskyActorDeclaration from './types/chat/bsky/actor/declaration.js'
-export * as ChatBskyActorDefs from './types/chat/bsky/actor/defs.js'
-export * as ChatBskyActorDeleteAccount from './types/chat/bsky/actor/deleteAccount.js'
-export * as ChatBskyActorExportAccountData from './types/chat/bsky/actor/exportAccountData.js'
-export * as ChatBskyConvoAcceptConvo from './types/chat/bsky/convo/acceptConvo.js'
-export * as ChatBskyConvoAddReaction from './types/chat/bsky/convo/addReaction.js'
-export * as ChatBskyConvoDefs from './types/chat/bsky/convo/defs.js'
-export * as ChatBskyConvoDeleteMessageForSelf from './types/chat/bsky/convo/deleteMessageForSelf.js'
-export * as ChatBskyConvoGetConvo from './types/chat/bsky/convo/getConvo.js'
-export * as ChatBskyConvoGetConvoAvailability from './types/chat/bsky/convo/getConvoAvailability.js'
-export * as ChatBskyConvoGetConvoForMembers from './types/chat/bsky/convo/getConvoForMembers.js'
-export * as ChatBskyConvoGetLog from './types/chat/bsky/convo/getLog.js'
-export * as ChatBskyConvoGetMessages from './types/chat/bsky/convo/getMessages.js'
-export * as ChatBskyConvoLeaveConvo from './types/chat/bsky/convo/leaveConvo.js'
-export * as ChatBskyConvoListConvos from './types/chat/bsky/convo/listConvos.js'
-export * as ChatBskyConvoMuteConvo from './types/chat/bsky/convo/muteConvo.js'
-export * as ChatBskyConvoRemoveReaction from './types/chat/bsky/convo/removeReaction.js'
-export * as ChatBskyConvoSendMessage from './types/chat/bsky/convo/sendMessage.js'
-export * as ChatBskyConvoSendMessageBatch from './types/chat/bsky/convo/sendMessageBatch.js'
-export * as ChatBskyConvoUnmuteConvo from './types/chat/bsky/convo/unmuteConvo.js'
-export * as ChatBskyConvoUpdateAllRead from './types/chat/bsky/convo/updateAllRead.js'
-export * as ChatBskyConvoUpdateRead from './types/chat/bsky/convo/updateRead.js'
-export * as ChatBskyModerationGetActorMetadata from './types/chat/bsky/moderation/getActorMetadata.js'
-export * as ChatBskyModerationGetMessageContext from './types/chat/bsky/moderation/getMessageContext.js'
-export * as ChatBskyModerationUpdateActorAccess from './types/chat/bsky/moderation/updateActorAccess.js'
-export * as ComAtprotoAdminDefs from './types/com/atproto/admin/defs.js'
-export * as ComAtprotoAdminDeleteAccount from './types/com/atproto/admin/deleteAccount.js'
-export * as ComAtprotoAdminDisableAccountInvites from './types/com/atproto/admin/disableAccountInvites.js'
-export * as ComAtprotoAdminDisableInviteCodes from './types/com/atproto/admin/disableInviteCodes.js'
-export * as ComAtprotoAdminEnableAccountInvites from './types/com/atproto/admin/enableAccountInvites.js'
-export * as ComAtprotoAdminGetAccountInfo from './types/com/atproto/admin/getAccountInfo.js'
-export * as ComAtprotoAdminGetAccountInfos from './types/com/atproto/admin/getAccountInfos.js'
-export * as ComAtprotoAdminGetInviteCodes from './types/com/atproto/admin/getInviteCodes.js'
-export * as ComAtprotoAdminGetSubjectStatus from './types/com/atproto/admin/getSubjectStatus.js'
-export * as ComAtprotoAdminSearchAccounts from './types/com/atproto/admin/searchAccounts.js'
-export * as ComAtprotoAdminSendEmail from './types/com/atproto/admin/sendEmail.js'
-export * as ComAtprotoAdminUpdateAccountEmail from './types/com/atproto/admin/updateAccountEmail.js'
-export * as ComAtprotoAdminUpdateAccountHandle from './types/com/atproto/admin/updateAccountHandle.js'
-export * as ComAtprotoAdminUpdateAccountPassword from './types/com/atproto/admin/updateAccountPassword.js'
-export * as ComAtprotoAdminUpdateAccountSigningKey from './types/com/atproto/admin/updateAccountSigningKey.js'
-export * as ComAtprotoAdminUpdateSubjectStatus from './types/com/atproto/admin/updateSubjectStatus.js'
-export * as ComAtprotoIdentityDefs from './types/com/atproto/identity/defs.js'
-export * as ComAtprotoIdentityGetRecommendedDidCredentials from './types/com/atproto/identity/getRecommendedDidCredentials.js'
-export * as ComAtprotoIdentityRefreshIdentity from './types/com/atproto/identity/refreshIdentity.js'
-export * as ComAtprotoIdentityRequestPlcOperationSignature from './types/com/atproto/identity/requestPlcOperationSignature.js'
-export * as ComAtprotoIdentityResolveDid from './types/com/atproto/identity/resolveDid.js'
-export * as ComAtprotoIdentityResolveHandle from './types/com/atproto/identity/resolveHandle.js'
-export * as ComAtprotoIdentityResolveIdentity from './types/com/atproto/identity/resolveIdentity.js'
-export * as ComAtprotoIdentitySignPlcOperation from './types/com/atproto/identity/signPlcOperation.js'
-export * as ComAtprotoIdentitySubmitPlcOperation from './types/com/atproto/identity/submitPlcOperation.js'
-export * as ComAtprotoIdentityUpdateHandle from './types/com/atproto/identity/updateHandle.js'
-export * as ComAtprotoLabelDefs from './types/com/atproto/label/defs.js'
-export * as ComAtprotoLabelQueryLabels from './types/com/atproto/label/queryLabels.js'
-export * as ComAtprotoLabelSubscribeLabels from './types/com/atproto/label/subscribeLabels.js'
-export * as ComAtprotoLexiconSchema from './types/com/atproto/lexicon/schema.js'
-export * as ComAtprotoModerationCreateReport from './types/com/atproto/moderation/createReport.js'
-export * as ComAtprotoModerationDefs from './types/com/atproto/moderation/defs.js'
-export * as ComAtprotoRepoApplyWrites from './types/com/atproto/repo/applyWrites.js'
-export * as ComAtprotoRepoCreateRecord from './types/com/atproto/repo/createRecord.js'
-export * as ComAtprotoRepoDefs from './types/com/atproto/repo/defs.js'
-export * as ComAtprotoRepoDeleteRecord from './types/com/atproto/repo/deleteRecord.js'
-export * as ComAtprotoRepoDescribeRepo from './types/com/atproto/repo/describeRepo.js'
-export * as ComAtprotoRepoGetRecord from './types/com/atproto/repo/getRecord.js'
-export * as ComAtprotoRepoImportRepo from './types/com/atproto/repo/importRepo.js'
-export * as ComAtprotoRepoListMissingBlobs from './types/com/atproto/repo/listMissingBlobs.js'
-export * as ComAtprotoRepoListRecords from './types/com/atproto/repo/listRecords.js'
-export * as ComAtprotoRepoPutRecord from './types/com/atproto/repo/putRecord.js'
-export * as ComAtprotoRepoStrongRef from './types/com/atproto/repo/strongRef.js'
-export * as ComAtprotoRepoUploadBlob from './types/com/atproto/repo/uploadBlob.js'
-export * as ComAtprotoServerActivateAccount from './types/com/atproto/server/activateAccount.js'
-export * as ComAtprotoServerCheckAccountStatus from './types/com/atproto/server/checkAccountStatus.js'
-export * as ComAtprotoServerConfirmEmail from './types/com/atproto/server/confirmEmail.js'
-export * as ComAtprotoServerCreateAccount from './types/com/atproto/server/createAccount.js'
-export * as ComAtprotoServerCreateAppPassword from './types/com/atproto/server/createAppPassword.js'
-export * as ComAtprotoServerCreateInviteCode from './types/com/atproto/server/createInviteCode.js'
-export * as ComAtprotoServerCreateInviteCodes from './types/com/atproto/server/createInviteCodes.js'
-export * as ComAtprotoServerCreateSession from './types/com/atproto/server/createSession.js'
-export * as ComAtprotoServerDeactivateAccount from './types/com/atproto/server/deactivateAccount.js'
-export * as ComAtprotoServerDefs from './types/com/atproto/server/defs.js'
-export * as ComAtprotoServerDeleteAccount from './types/com/atproto/server/deleteAccount.js'
-export * as ComAtprotoServerDeleteSession from './types/com/atproto/server/deleteSession.js'
-export * as ComAtprotoServerDescribeServer from './types/com/atproto/server/describeServer.js'
-export * as ComAtprotoServerGetAccountInviteCodes from './types/com/atproto/server/getAccountInviteCodes.js'
-export * as ComAtprotoServerGetServiceAuth from './types/com/atproto/server/getServiceAuth.js'
-export * as ComAtprotoServerGetSession from './types/com/atproto/server/getSession.js'
-export * as ComAtprotoServerListAppPasswords from './types/com/atproto/server/listAppPasswords.js'
-export * as ComAtprotoServerRefreshSession from './types/com/atproto/server/refreshSession.js'
-export * as ComAtprotoServerRequestAccountDelete from './types/com/atproto/server/requestAccountDelete.js'
-export * as ComAtprotoServerRequestEmailConfirmation from './types/com/atproto/server/requestEmailConfirmation.js'
-export * as ComAtprotoServerRequestEmailUpdate from './types/com/atproto/server/requestEmailUpdate.js'
-export * as ComAtprotoServerRequestPasswordReset from './types/com/atproto/server/requestPasswordReset.js'
-export * as ComAtprotoServerReserveSigningKey from './types/com/atproto/server/reserveSigningKey.js'
-export * as ComAtprotoServerResetPassword from './types/com/atproto/server/resetPassword.js'
-export * as ComAtprotoServerRevokeAppPassword from './types/com/atproto/server/revokeAppPassword.js'
-export * as ComAtprotoServerUpdateEmail from './types/com/atproto/server/updateEmail.js'
-export * as ComAtprotoSyncDefs from './types/com/atproto/sync/defs.js'
-export * as ComAtprotoSyncGetBlob from './types/com/atproto/sync/getBlob.js'
-export * as ComAtprotoSyncGetBlocks from './types/com/atproto/sync/getBlocks.js'
-export * as ComAtprotoSyncGetCheckout from './types/com/atproto/sync/getCheckout.js'
-export * as ComAtprotoSyncGetHead from './types/com/atproto/sync/getHead.js'
-export * as ComAtprotoSyncGetHostStatus from './types/com/atproto/sync/getHostStatus.js'
-export * as ComAtprotoSyncGetLatestCommit from './types/com/atproto/sync/getLatestCommit.js'
-export * as ComAtprotoSyncGetRecord from './types/com/atproto/sync/getRecord.js'
-export * as ComAtprotoSyncGetRepo from './types/com/atproto/sync/getRepo.js'
-export * as ComAtprotoSyncGetRepoStatus from './types/com/atproto/sync/getRepoStatus.js'
-export * as ComAtprotoSyncListBlobs from './types/com/atproto/sync/listBlobs.js'
-export * as ComAtprotoSyncListHosts from './types/com/atproto/sync/listHosts.js'
-export * as ComAtprotoSyncListRepos from './types/com/atproto/sync/listRepos.js'
-export * as ComAtprotoSyncListReposByCollection from './types/com/atproto/sync/listReposByCollection.js'
-export * as ComAtprotoSyncNotifyOfUpdate from './types/com/atproto/sync/notifyOfUpdate.js'
-export * as ComAtprotoSyncRequestCrawl from './types/com/atproto/sync/requestCrawl.js'
-export * as ComAtprotoSyncSubscribeRepos from './types/com/atproto/sync/subscribeRepos.js'
-export * as ComAtprotoTempAddReservedHandle from './types/com/atproto/temp/addReservedHandle.js'
-export * as ComAtprotoTempCheckSignupQueue from './types/com/atproto/temp/checkSignupQueue.js'
-export * as ComAtprotoTempFetchLabels from './types/com/atproto/temp/fetchLabels.js'
-export * as ComAtprotoTempRequestPhoneVerification from './types/com/atproto/temp/requestPhoneVerification.js'
-export * as ToolsOzoneCommunicationCreateTemplate from './types/tools/ozone/communication/createTemplate.js'
-export * as ToolsOzoneCommunicationDefs from './types/tools/ozone/communication/defs.js'
-export * as ToolsOzoneCommunicationDeleteTemplate from './types/tools/ozone/communication/deleteTemplate.js'
-export * as ToolsOzoneCommunicationListTemplates from './types/tools/ozone/communication/listTemplates.js'
-export * as ToolsOzoneCommunicationUpdateTemplate from './types/tools/ozone/communication/updateTemplate.js'
-export * as ToolsOzoneHostingGetAccountHistory from './types/tools/ozone/hosting/getAccountHistory.js'
-export * as ToolsOzoneModerationDefs from './types/tools/ozone/moderation/defs.js'
-export * as ToolsOzoneModerationEmitEvent from './types/tools/ozone/moderation/emitEvent.js'
-export * as ToolsOzoneModerationGetEvent from './types/tools/ozone/moderation/getEvent.js'
-export * as ToolsOzoneModerationGetRecord from './types/tools/ozone/moderation/getRecord.js'
-export * as ToolsOzoneModerationGetRecords from './types/tools/ozone/moderation/getRecords.js'
-export * as ToolsOzoneModerationGetRepo from './types/tools/ozone/moderation/getRepo.js'
-export * as ToolsOzoneModerationGetReporterStats from './types/tools/ozone/moderation/getReporterStats.js'
-export * as ToolsOzoneModerationGetRepos from './types/tools/ozone/moderation/getRepos.js'
-export * as ToolsOzoneModerationGetSubjects from './types/tools/ozone/moderation/getSubjects.js'
-export * as ToolsOzoneModerationQueryEvents from './types/tools/ozone/moderation/queryEvents.js'
-export * as ToolsOzoneModerationQueryStatuses from './types/tools/ozone/moderation/queryStatuses.js'
-export * as ToolsOzoneModerationSearchRepos from './types/tools/ozone/moderation/searchRepos.js'
-export * as ToolsOzoneServerGetConfig from './types/tools/ozone/server/getConfig.js'
-export * as ToolsOzoneSetAddValues from './types/tools/ozone/set/addValues.js'
-export * as ToolsOzoneSetDefs from './types/tools/ozone/set/defs.js'
-export * as ToolsOzoneSetDeleteSet from './types/tools/ozone/set/deleteSet.js'
-export * as ToolsOzoneSetDeleteValues from './types/tools/ozone/set/deleteValues.js'
-export * as ToolsOzoneSetGetValues from './types/tools/ozone/set/getValues.js'
-export * as ToolsOzoneSetQuerySets from './types/tools/ozone/set/querySets.js'
-export * as ToolsOzoneSetUpsertSet from './types/tools/ozone/set/upsertSet.js'
-export * as ToolsOzoneSettingDefs from './types/tools/ozone/setting/defs.js'
-export * as ToolsOzoneSettingListOptions from './types/tools/ozone/setting/listOptions.js'
-export * as ToolsOzoneSettingRemoveOptions from './types/tools/ozone/setting/removeOptions.js'
-export * as ToolsOzoneSettingUpsertOption from './types/tools/ozone/setting/upsertOption.js'
-export * as ToolsOzoneSignatureDefs from './types/tools/ozone/signature/defs.js'
-export * as ToolsOzoneSignatureFindCorrelation from './types/tools/ozone/signature/findCorrelation.js'
-export * as ToolsOzoneSignatureFindRelatedAccounts from './types/tools/ozone/signature/findRelatedAccounts.js'
-export * as ToolsOzoneSignatureSearchAccounts from './types/tools/ozone/signature/searchAccounts.js'
-export * as ToolsOzoneTeamAddMember from './types/tools/ozone/team/addMember.js'
-export * as ToolsOzoneTeamDefs from './types/tools/ozone/team/defs.js'
-export * as ToolsOzoneTeamDeleteMember from './types/tools/ozone/team/deleteMember.js'
-export * as ToolsOzoneTeamListMembers from './types/tools/ozone/team/listMembers.js'
-export * as ToolsOzoneTeamUpdateMember from './types/tools/ozone/team/updateMember.js'
-export * as ToolsOzoneVerificationDefs from './types/tools/ozone/verification/defs.js'
-export * as ToolsOzoneVerificationGrantVerifications from './types/tools/ozone/verification/grantVerifications.js'
-export * as ToolsOzoneVerificationListVerifications from './types/tools/ozone/verification/listVerifications.js'
-export * as ToolsOzoneVerificationRevokeVerifications from './types/tools/ozone/verification/revokeVerifications.js'
-
+export const COM_ATPROTO_MODERATION = {
+  DefsReasonSpam: 'com.atproto.moderation.defs#reasonSpam',
+  DefsReasonViolation: 'com.atproto.moderation.defs#reasonViolation',
+  DefsReasonMisleading: 'com.atproto.moderation.defs#reasonMisleading',
+  DefsReasonSexual: 'com.atproto.moderation.defs#reasonSexual',
+  DefsReasonRude: 'com.atproto.moderation.defs#reasonRude',
+  DefsReasonOther: 'com.atproto.moderation.defs#reasonOther',
+  DefsReasonAppeal: 'com.atproto.moderation.defs#reasonAppeal',
+}
 export const APP_BSKY_FEED = {
   DefsRequestLess: 'app.bsky.feed.defs#requestLess',
   DefsRequestMore: 'app.bsky.feed.defs#requestMore',
@@ -550,15 +251,6 @@ export const APP_BSKY_GRAPH = {
   DefsCuratelist: 'app.bsky.graph.defs#curatelist',
   DefsReferencelist: 'app.bsky.graph.defs#referencelist',
 }
-export const COM_ATPROTO_MODERATION = {
-  DefsReasonSpam: 'com.atproto.moderation.defs#reasonSpam',
-  DefsReasonViolation: 'com.atproto.moderation.defs#reasonViolation',
-  DefsReasonMisleading: 'com.atproto.moderation.defs#reasonMisleading',
-  DefsReasonSexual: 'com.atproto.moderation.defs#reasonSexual',
-  DefsReasonRude: 'com.atproto.moderation.defs#reasonRude',
-  DefsReasonOther: 'com.atproto.moderation.defs#reasonOther',
-  DefsReasonAppeal: 'com.atproto.moderation.defs#reasonAppeal',
-}
 export const TOOLS_OZONE_MODERATION = {
   DefsReviewOpen: 'tools.ozone.moderation.defs#reviewOpen',
   DefsReviewEscalated: 'tools.ozone.moderation.defs#reviewEscalated',
@@ -572,2279 +264,38 @@ export const TOOLS_OZONE_TEAM = {
   DefsRoleVerifier: 'tools.ozone.team.defs#roleVerifier',
 }
 
-export class AtpBaseClient extends XrpcClient {
+export function createServer(options?: XrpcOptions): Server {
+  return new Server(options)
+}
+
+export class Server {
+  xrpc: XrpcServer
+  com: ComNS
   app: AppNS
   chat: ChatNS
-  com: ComNS
   tools: ToolsNS
 
-  constructor(options: FetchHandler | FetchHandlerOptions) {
-    super(options, schemas)
+  constructor(options?: XrpcOptions) {
+    this.xrpc = createXrpcServer(schemas, options)
+    this.com = new ComNS(this)
     this.app = new AppNS(this)
     this.chat = new ChatNS(this)
-    this.com = new ComNS(this)
     this.tools = new ToolsNS(this)
-  }
-
-  /** @deprecated use `this` instead */
-  get xrpc(): XrpcClient {
-    return this
-  }
-}
-
-export class AppNS {
-  _client: XrpcClient
-  bsky: AppBskyNS
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.bsky = new AppBskyNS(client)
-  }
-}
-
-export class AppBskyNS {
-  _client: XrpcClient
-  actor: AppBskyActorNS
-  embed: AppBskyEmbedNS
-  feed: AppBskyFeedNS
-  graph: AppBskyGraphNS
-  labeler: AppBskyLabelerNS
-  notification: AppBskyNotificationNS
-  richtext: AppBskyRichtextNS
-  unspecced: AppBskyUnspeccedNS
-  video: AppBskyVideoNS
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.actor = new AppBskyActorNS(client)
-    this.embed = new AppBskyEmbedNS(client)
-    this.feed = new AppBskyFeedNS(client)
-    this.graph = new AppBskyGraphNS(client)
-    this.labeler = new AppBskyLabelerNS(client)
-    this.notification = new AppBskyNotificationNS(client)
-    this.richtext = new AppBskyRichtextNS(client)
-    this.unspecced = new AppBskyUnspeccedNS(client)
-    this.video = new AppBskyVideoNS(client)
-  }
-}
-
-export class AppBskyActorNS {
-  _client: XrpcClient
-  profile: AppBskyActorProfileRecord
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.profile = new AppBskyActorProfileRecord(client)
-  }
-
-  getPreferences(
-    params?: AppBskyActorGetPreferences.QueryParams,
-    opts?: AppBskyActorGetPreferences.CallOptions,
-  ): Promise<AppBskyActorGetPreferences.Response> {
-    return this._client.call(
-      'app.bsky.actor.getPreferences',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getProfile(
-    params?: AppBskyActorGetProfile.QueryParams,
-    opts?: AppBskyActorGetProfile.CallOptions,
-  ): Promise<AppBskyActorGetProfile.Response> {
-    return this._client.call(
-      'app.bsky.actor.getProfile',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getProfiles(
-    params?: AppBskyActorGetProfiles.QueryParams,
-    opts?: AppBskyActorGetProfiles.CallOptions,
-  ): Promise<AppBskyActorGetProfiles.Response> {
-    return this._client.call(
-      'app.bsky.actor.getProfiles',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getSuggestions(
-    params?: AppBskyActorGetSuggestions.QueryParams,
-    opts?: AppBskyActorGetSuggestions.CallOptions,
-  ): Promise<AppBskyActorGetSuggestions.Response> {
-    return this._client.call(
-      'app.bsky.actor.getSuggestions',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  putPreferences(
-    data?: AppBskyActorPutPreferences.InputSchema,
-    opts?: AppBskyActorPutPreferences.CallOptions,
-  ): Promise<AppBskyActorPutPreferences.Response> {
-    return this._client.call(
-      'app.bsky.actor.putPreferences',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-
-  searchActors(
-    params?: AppBskyActorSearchActors.QueryParams,
-    opts?: AppBskyActorSearchActors.CallOptions,
-  ): Promise<AppBskyActorSearchActors.Response> {
-    return this._client.call(
-      'app.bsky.actor.searchActors',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  searchActorsTypeahead(
-    params?: AppBskyActorSearchActorsTypeahead.QueryParams,
-    opts?: AppBskyActorSearchActorsTypeahead.CallOptions,
-  ): Promise<AppBskyActorSearchActorsTypeahead.Response> {
-    return this._client.call(
-      'app.bsky.actor.searchActorsTypeahead',
-      params,
-      undefined,
-      opts,
-    )
-  }
-}
-
-export class AppBskyActorProfileRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyActorProfile.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.actor.profile',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{ uri: string; cid: string; value: AppBskyActorProfile.Record }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.actor.profile',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyActorProfile.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.actor.profile'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      {
-        collection,
-        rkey: 'self',
-        ...params,
-        record: { ...record, $type: collection },
-      },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.actor.profile', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyEmbedNS {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-}
-
-export class AppBskyFeedNS {
-  _client: XrpcClient
-  generator: AppBskyFeedGeneratorRecord
-  like: AppBskyFeedLikeRecord
-  post: AppBskyFeedPostRecord
-  postgate: AppBskyFeedPostgateRecord
-  repost: AppBskyFeedRepostRecord
-  threadgate: AppBskyFeedThreadgateRecord
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.generator = new AppBskyFeedGeneratorRecord(client)
-    this.like = new AppBskyFeedLikeRecord(client)
-    this.post = new AppBskyFeedPostRecord(client)
-    this.postgate = new AppBskyFeedPostgateRecord(client)
-    this.repost = new AppBskyFeedRepostRecord(client)
-    this.threadgate = new AppBskyFeedThreadgateRecord(client)
-  }
-
-  describeFeedGenerator(
-    params?: AppBskyFeedDescribeFeedGenerator.QueryParams,
-    opts?: AppBskyFeedDescribeFeedGenerator.CallOptions,
-  ): Promise<AppBskyFeedDescribeFeedGenerator.Response> {
-    return this._client.call(
-      'app.bsky.feed.describeFeedGenerator',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getActorFeeds(
-    params?: AppBskyFeedGetActorFeeds.QueryParams,
-    opts?: AppBskyFeedGetActorFeeds.CallOptions,
-  ): Promise<AppBskyFeedGetActorFeeds.Response> {
-    return this._client.call(
-      'app.bsky.feed.getActorFeeds',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getActorLikes(
-    params?: AppBskyFeedGetActorLikes.QueryParams,
-    opts?: AppBskyFeedGetActorLikes.CallOptions,
-  ): Promise<AppBskyFeedGetActorLikes.Response> {
-    return this._client
-      .call('app.bsky.feed.getActorLikes', params, undefined, opts)
-      .catch((e) => {
-        throw AppBskyFeedGetActorLikes.toKnownErr(e)
-      })
-  }
-
-  getAuthorFeed(
-    params?: AppBskyFeedGetAuthorFeed.QueryParams,
-    opts?: AppBskyFeedGetAuthorFeed.CallOptions,
-  ): Promise<AppBskyFeedGetAuthorFeed.Response> {
-    return this._client
-      .call('app.bsky.feed.getAuthorFeed', params, undefined, opts)
-      .catch((e) => {
-        throw AppBskyFeedGetAuthorFeed.toKnownErr(e)
-      })
-  }
-
-  getFeed(
-    params?: AppBskyFeedGetFeed.QueryParams,
-    opts?: AppBskyFeedGetFeed.CallOptions,
-  ): Promise<AppBskyFeedGetFeed.Response> {
-    return this._client
-      .call('app.bsky.feed.getFeed', params, undefined, opts)
-      .catch((e) => {
-        throw AppBskyFeedGetFeed.toKnownErr(e)
-      })
-  }
-
-  getFeedGenerator(
-    params?: AppBskyFeedGetFeedGenerator.QueryParams,
-    opts?: AppBskyFeedGetFeedGenerator.CallOptions,
-  ): Promise<AppBskyFeedGetFeedGenerator.Response> {
-    return this._client.call(
-      'app.bsky.feed.getFeedGenerator',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getFeedGenerators(
-    params?: AppBskyFeedGetFeedGenerators.QueryParams,
-    opts?: AppBskyFeedGetFeedGenerators.CallOptions,
-  ): Promise<AppBskyFeedGetFeedGenerators.Response> {
-    return this._client.call(
-      'app.bsky.feed.getFeedGenerators',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getFeedSkeleton(
-    params?: AppBskyFeedGetFeedSkeleton.QueryParams,
-    opts?: AppBskyFeedGetFeedSkeleton.CallOptions,
-  ): Promise<AppBskyFeedGetFeedSkeleton.Response> {
-    return this._client
-      .call('app.bsky.feed.getFeedSkeleton', params, undefined, opts)
-      .catch((e) => {
-        throw AppBskyFeedGetFeedSkeleton.toKnownErr(e)
-      })
-  }
-
-  getLikes(
-    params?: AppBskyFeedGetLikes.QueryParams,
-    opts?: AppBskyFeedGetLikes.CallOptions,
-  ): Promise<AppBskyFeedGetLikes.Response> {
-    return this._client.call('app.bsky.feed.getLikes', params, undefined, opts)
-  }
-
-  getListFeed(
-    params?: AppBskyFeedGetListFeed.QueryParams,
-    opts?: AppBskyFeedGetListFeed.CallOptions,
-  ): Promise<AppBskyFeedGetListFeed.Response> {
-    return this._client
-      .call('app.bsky.feed.getListFeed', params, undefined, opts)
-      .catch((e) => {
-        throw AppBskyFeedGetListFeed.toKnownErr(e)
-      })
-  }
-
-  getPostThread(
-    params?: AppBskyFeedGetPostThread.QueryParams,
-    opts?: AppBskyFeedGetPostThread.CallOptions,
-  ): Promise<AppBskyFeedGetPostThread.Response> {
-    return this._client
-      .call('app.bsky.feed.getPostThread', params, undefined, opts)
-      .catch((e) => {
-        throw AppBskyFeedGetPostThread.toKnownErr(e)
-      })
-  }
-
-  getPosts(
-    params?: AppBskyFeedGetPosts.QueryParams,
-    opts?: AppBskyFeedGetPosts.CallOptions,
-  ): Promise<AppBskyFeedGetPosts.Response> {
-    return this._client.call('app.bsky.feed.getPosts', params, undefined, opts)
-  }
-
-  getQuotes(
-    params?: AppBskyFeedGetQuotes.QueryParams,
-    opts?: AppBskyFeedGetQuotes.CallOptions,
-  ): Promise<AppBskyFeedGetQuotes.Response> {
-    return this._client.call('app.bsky.feed.getQuotes', params, undefined, opts)
-  }
-
-  getRepostedBy(
-    params?: AppBskyFeedGetRepostedBy.QueryParams,
-    opts?: AppBskyFeedGetRepostedBy.CallOptions,
-  ): Promise<AppBskyFeedGetRepostedBy.Response> {
-    return this._client.call(
-      'app.bsky.feed.getRepostedBy',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getSuggestedFeeds(
-    params?: AppBskyFeedGetSuggestedFeeds.QueryParams,
-    opts?: AppBskyFeedGetSuggestedFeeds.CallOptions,
-  ): Promise<AppBskyFeedGetSuggestedFeeds.Response> {
-    return this._client.call(
-      'app.bsky.feed.getSuggestedFeeds',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getTimeline(
-    params?: AppBskyFeedGetTimeline.QueryParams,
-    opts?: AppBskyFeedGetTimeline.CallOptions,
-  ): Promise<AppBskyFeedGetTimeline.Response> {
-    return this._client.call(
-      'app.bsky.feed.getTimeline',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  searchPosts(
-    params?: AppBskyFeedSearchPosts.QueryParams,
-    opts?: AppBskyFeedSearchPosts.CallOptions,
-  ): Promise<AppBskyFeedSearchPosts.Response> {
-    return this._client
-      .call('app.bsky.feed.searchPosts', params, undefined, opts)
-      .catch((e) => {
-        throw AppBskyFeedSearchPosts.toKnownErr(e)
-      })
-  }
-
-  sendInteractions(
-    data?: AppBskyFeedSendInteractions.InputSchema,
-    opts?: AppBskyFeedSendInteractions.CallOptions,
-  ): Promise<AppBskyFeedSendInteractions.Response> {
-    return this._client.call(
-      'app.bsky.feed.sendInteractions',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-}
-
-export class AppBskyFeedGeneratorRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyFeedGenerator.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.feed.generator',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{ uri: string; cid: string; value: AppBskyFeedGenerator.Record }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.feed.generator',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyFeedGenerator.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.feed.generator'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.feed.generator', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyFeedLikeRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyFeedLike.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.feed.like',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{ uri: string; cid: string; value: AppBskyFeedLike.Record }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.feed.like',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyFeedLike.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.feed.like'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.feed.like', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyFeedPostRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyFeedPost.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.feed.post',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{ uri: string; cid: string; value: AppBskyFeedPost.Record }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.feed.post',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyFeedPost.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.feed.post'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.feed.post', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyFeedPostgateRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyFeedPostgate.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.feed.postgate',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{ uri: string; cid: string; value: AppBskyFeedPostgate.Record }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.feed.postgate',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyFeedPostgate.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.feed.postgate'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.feed.postgate', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyFeedRepostRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyFeedRepost.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.feed.repost',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{ uri: string; cid: string; value: AppBskyFeedRepost.Record }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.feed.repost',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyFeedRepost.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.feed.repost'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.feed.repost', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyFeedThreadgateRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyFeedThreadgate.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.feed.threadgate',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{
-    uri: string
-    cid: string
-    value: AppBskyFeedThreadgate.Record
-  }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.feed.threadgate',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyFeedThreadgate.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.feed.threadgate'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.feed.threadgate', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyGraphNS {
-  _client: XrpcClient
-  block: AppBskyGraphBlockRecord
-  follow: AppBskyGraphFollowRecord
-  list: AppBskyGraphListRecord
-  listblock: AppBskyGraphListblockRecord
-  listitem: AppBskyGraphListitemRecord
-  starterpack: AppBskyGraphStarterpackRecord
-  verification: AppBskyGraphVerificationRecord
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.block = new AppBskyGraphBlockRecord(client)
-    this.follow = new AppBskyGraphFollowRecord(client)
-    this.list = new AppBskyGraphListRecord(client)
-    this.listblock = new AppBskyGraphListblockRecord(client)
-    this.listitem = new AppBskyGraphListitemRecord(client)
-    this.starterpack = new AppBskyGraphStarterpackRecord(client)
-    this.verification = new AppBskyGraphVerificationRecord(client)
-  }
-
-  getActorStarterPacks(
-    params?: AppBskyGraphGetActorStarterPacks.QueryParams,
-    opts?: AppBskyGraphGetActorStarterPacks.CallOptions,
-  ): Promise<AppBskyGraphGetActorStarterPacks.Response> {
-    return this._client.call(
-      'app.bsky.graph.getActorStarterPacks',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getBlocks(
-    params?: AppBskyGraphGetBlocks.QueryParams,
-    opts?: AppBskyGraphGetBlocks.CallOptions,
-  ): Promise<AppBskyGraphGetBlocks.Response> {
-    return this._client.call(
-      'app.bsky.graph.getBlocks',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getFollowers(
-    params?: AppBskyGraphGetFollowers.QueryParams,
-    opts?: AppBskyGraphGetFollowers.CallOptions,
-  ): Promise<AppBskyGraphGetFollowers.Response> {
-    return this._client.call(
-      'app.bsky.graph.getFollowers',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getFollows(
-    params?: AppBskyGraphGetFollows.QueryParams,
-    opts?: AppBskyGraphGetFollows.CallOptions,
-  ): Promise<AppBskyGraphGetFollows.Response> {
-    return this._client.call(
-      'app.bsky.graph.getFollows',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getKnownFollowers(
-    params?: AppBskyGraphGetKnownFollowers.QueryParams,
-    opts?: AppBskyGraphGetKnownFollowers.CallOptions,
-  ): Promise<AppBskyGraphGetKnownFollowers.Response> {
-    return this._client.call(
-      'app.bsky.graph.getKnownFollowers',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getList(
-    params?: AppBskyGraphGetList.QueryParams,
-    opts?: AppBskyGraphGetList.CallOptions,
-  ): Promise<AppBskyGraphGetList.Response> {
-    return this._client.call('app.bsky.graph.getList', params, undefined, opts)
-  }
-
-  getListBlocks(
-    params?: AppBskyGraphGetListBlocks.QueryParams,
-    opts?: AppBskyGraphGetListBlocks.CallOptions,
-  ): Promise<AppBskyGraphGetListBlocks.Response> {
-    return this._client.call(
-      'app.bsky.graph.getListBlocks',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getListMutes(
-    params?: AppBskyGraphGetListMutes.QueryParams,
-    opts?: AppBskyGraphGetListMutes.CallOptions,
-  ): Promise<AppBskyGraphGetListMutes.Response> {
-    return this._client.call(
-      'app.bsky.graph.getListMutes',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getLists(
-    params?: AppBskyGraphGetLists.QueryParams,
-    opts?: AppBskyGraphGetLists.CallOptions,
-  ): Promise<AppBskyGraphGetLists.Response> {
-    return this._client.call('app.bsky.graph.getLists', params, undefined, opts)
-  }
-
-  getMutes(
-    params?: AppBskyGraphGetMutes.QueryParams,
-    opts?: AppBskyGraphGetMutes.CallOptions,
-  ): Promise<AppBskyGraphGetMutes.Response> {
-    return this._client.call('app.bsky.graph.getMutes', params, undefined, opts)
-  }
-
-  getRelationships(
-    params?: AppBskyGraphGetRelationships.QueryParams,
-    opts?: AppBskyGraphGetRelationships.CallOptions,
-  ): Promise<AppBskyGraphGetRelationships.Response> {
-    return this._client
-      .call('app.bsky.graph.getRelationships', params, undefined, opts)
-      .catch((e) => {
-        throw AppBskyGraphGetRelationships.toKnownErr(e)
-      })
-  }
-
-  getStarterPack(
-    params?: AppBskyGraphGetStarterPack.QueryParams,
-    opts?: AppBskyGraphGetStarterPack.CallOptions,
-  ): Promise<AppBskyGraphGetStarterPack.Response> {
-    return this._client.call(
-      'app.bsky.graph.getStarterPack',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getStarterPacks(
-    params?: AppBskyGraphGetStarterPacks.QueryParams,
-    opts?: AppBskyGraphGetStarterPacks.CallOptions,
-  ): Promise<AppBskyGraphGetStarterPacks.Response> {
-    return this._client.call(
-      'app.bsky.graph.getStarterPacks',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getSuggestedFollowsByActor(
-    params?: AppBskyGraphGetSuggestedFollowsByActor.QueryParams,
-    opts?: AppBskyGraphGetSuggestedFollowsByActor.CallOptions,
-  ): Promise<AppBskyGraphGetSuggestedFollowsByActor.Response> {
-    return this._client.call(
-      'app.bsky.graph.getSuggestedFollowsByActor',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  muteActor(
-    data?: AppBskyGraphMuteActor.InputSchema,
-    opts?: AppBskyGraphMuteActor.CallOptions,
-  ): Promise<AppBskyGraphMuteActor.Response> {
-    return this._client.call('app.bsky.graph.muteActor', opts?.qp, data, opts)
-  }
-
-  muteActorList(
-    data?: AppBskyGraphMuteActorList.InputSchema,
-    opts?: AppBskyGraphMuteActorList.CallOptions,
-  ): Promise<AppBskyGraphMuteActorList.Response> {
-    return this._client.call(
-      'app.bsky.graph.muteActorList',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-
-  muteThread(
-    data?: AppBskyGraphMuteThread.InputSchema,
-    opts?: AppBskyGraphMuteThread.CallOptions,
-  ): Promise<AppBskyGraphMuteThread.Response> {
-    return this._client.call('app.bsky.graph.muteThread', opts?.qp, data, opts)
-  }
-
-  searchStarterPacks(
-    params?: AppBskyGraphSearchStarterPacks.QueryParams,
-    opts?: AppBskyGraphSearchStarterPacks.CallOptions,
-  ): Promise<AppBskyGraphSearchStarterPacks.Response> {
-    return this._client.call(
-      'app.bsky.graph.searchStarterPacks',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  unmuteActor(
-    data?: AppBskyGraphUnmuteActor.InputSchema,
-    opts?: AppBskyGraphUnmuteActor.CallOptions,
-  ): Promise<AppBskyGraphUnmuteActor.Response> {
-    return this._client.call('app.bsky.graph.unmuteActor', opts?.qp, data, opts)
-  }
-
-  unmuteActorList(
-    data?: AppBskyGraphUnmuteActorList.InputSchema,
-    opts?: AppBskyGraphUnmuteActorList.CallOptions,
-  ): Promise<AppBskyGraphUnmuteActorList.Response> {
-    return this._client.call(
-      'app.bsky.graph.unmuteActorList',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-
-  unmuteThread(
-    data?: AppBskyGraphUnmuteThread.InputSchema,
-    opts?: AppBskyGraphUnmuteThread.CallOptions,
-  ): Promise<AppBskyGraphUnmuteThread.Response> {
-    return this._client.call(
-      'app.bsky.graph.unmuteThread',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-}
-
-export class AppBskyGraphBlockRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyGraphBlock.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.graph.block',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{ uri: string; cid: string; value: AppBskyGraphBlock.Record }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.graph.block',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyGraphBlock.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.graph.block'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.graph.block', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyGraphFollowRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyGraphFollow.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.graph.follow',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{ uri: string; cid: string; value: AppBskyGraphFollow.Record }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.graph.follow',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyGraphFollow.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.graph.follow'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.graph.follow', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyGraphListRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyGraphList.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.graph.list',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{ uri: string; cid: string; value: AppBskyGraphList.Record }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.graph.list',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyGraphList.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.graph.list'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.graph.list', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyGraphListblockRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyGraphListblock.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.graph.listblock',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{
-    uri: string
-    cid: string
-    value: AppBskyGraphListblock.Record
-  }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.graph.listblock',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyGraphListblock.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.graph.listblock'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.graph.listblock', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyGraphListitemRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyGraphListitem.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.graph.listitem',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{ uri: string; cid: string; value: AppBskyGraphListitem.Record }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.graph.listitem',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyGraphListitem.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.graph.listitem'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.graph.listitem', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyGraphStarterpackRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyGraphStarterpack.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.graph.starterpack',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{
-    uri: string
-    cid: string
-    value: AppBskyGraphStarterpack.Record
-  }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.graph.starterpack',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyGraphStarterpack.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.graph.starterpack'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.graph.starterpack', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyGraphVerificationRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyGraphVerification.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.graph.verification',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{
-    uri: string
-    cid: string
-    value: AppBskyGraphVerification.Record
-  }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.graph.verification',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyGraphVerification.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.graph.verification'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.graph.verification', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyLabelerNS {
-  _client: XrpcClient
-  service: AppBskyLabelerServiceRecord
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.service = new AppBskyLabelerServiceRecord(client)
-  }
-
-  getServices(
-    params?: AppBskyLabelerGetServices.QueryParams,
-    opts?: AppBskyLabelerGetServices.CallOptions,
-  ): Promise<AppBskyLabelerGetServices.Response> {
-    return this._client.call(
-      'app.bsky.labeler.getServices',
-      params,
-      undefined,
-      opts,
-    )
-  }
-}
-
-export class AppBskyLabelerServiceRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: AppBskyLabelerService.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'app.bsky.labeler.service',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{
-    uri: string
-    cid: string
-    value: AppBskyLabelerService.Record
-  }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'app.bsky.labeler.service',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<AppBskyLabelerService.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'app.bsky.labeler.service'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      {
-        collection,
-        rkey: 'self',
-        ...params,
-        record: { ...record, $type: collection },
-      },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'app.bsky.labeler.service', ...params },
-      { headers },
-    )
-  }
-}
-
-export class AppBskyNotificationNS {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  getUnreadCount(
-    params?: AppBskyNotificationGetUnreadCount.QueryParams,
-    opts?: AppBskyNotificationGetUnreadCount.CallOptions,
-  ): Promise<AppBskyNotificationGetUnreadCount.Response> {
-    return this._client.call(
-      'app.bsky.notification.getUnreadCount',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  listNotifications(
-    params?: AppBskyNotificationListNotifications.QueryParams,
-    opts?: AppBskyNotificationListNotifications.CallOptions,
-  ): Promise<AppBskyNotificationListNotifications.Response> {
-    return this._client.call(
-      'app.bsky.notification.listNotifications',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  putPreferences(
-    data?: AppBskyNotificationPutPreferences.InputSchema,
-    opts?: AppBskyNotificationPutPreferences.CallOptions,
-  ): Promise<AppBskyNotificationPutPreferences.Response> {
-    return this._client.call(
-      'app.bsky.notification.putPreferences',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-
-  registerPush(
-    data?: AppBskyNotificationRegisterPush.InputSchema,
-    opts?: AppBskyNotificationRegisterPush.CallOptions,
-  ): Promise<AppBskyNotificationRegisterPush.Response> {
-    return this._client.call(
-      'app.bsky.notification.registerPush',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-
-  updateSeen(
-    data?: AppBskyNotificationUpdateSeen.InputSchema,
-    opts?: AppBskyNotificationUpdateSeen.CallOptions,
-  ): Promise<AppBskyNotificationUpdateSeen.Response> {
-    return this._client.call(
-      'app.bsky.notification.updateSeen',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-}
-
-export class AppBskyRichtextNS {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-}
-
-export class AppBskyUnspeccedNS {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  getConfig(
-    params?: AppBskyUnspeccedGetConfig.QueryParams,
-    opts?: AppBskyUnspeccedGetConfig.CallOptions,
-  ): Promise<AppBskyUnspeccedGetConfig.Response> {
-    return this._client.call(
-      'app.bsky.unspecced.getConfig',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getPopularFeedGenerators(
-    params?: AppBskyUnspeccedGetPopularFeedGenerators.QueryParams,
-    opts?: AppBskyUnspeccedGetPopularFeedGenerators.CallOptions,
-  ): Promise<AppBskyUnspeccedGetPopularFeedGenerators.Response> {
-    return this._client.call(
-      'app.bsky.unspecced.getPopularFeedGenerators',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getSuggestedFeeds(
-    params?: AppBskyUnspeccedGetSuggestedFeeds.QueryParams,
-    opts?: AppBskyUnspeccedGetSuggestedFeeds.CallOptions,
-  ): Promise<AppBskyUnspeccedGetSuggestedFeeds.Response> {
-    return this._client.call(
-      'app.bsky.unspecced.getSuggestedFeeds',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getSuggestedFeedsSkeleton(
-    params?: AppBskyUnspeccedGetSuggestedFeedsSkeleton.QueryParams,
-    opts?: AppBskyUnspeccedGetSuggestedFeedsSkeleton.CallOptions,
-  ): Promise<AppBskyUnspeccedGetSuggestedFeedsSkeleton.Response> {
-    return this._client.call(
-      'app.bsky.unspecced.getSuggestedFeedsSkeleton',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getSuggestedStarterPacks(
-    params?: AppBskyUnspeccedGetSuggestedStarterPacks.QueryParams,
-    opts?: AppBskyUnspeccedGetSuggestedStarterPacks.CallOptions,
-  ): Promise<AppBskyUnspeccedGetSuggestedStarterPacks.Response> {
-    return this._client.call(
-      'app.bsky.unspecced.getSuggestedStarterPacks',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getSuggestedStarterPacksSkeleton(
-    params?: AppBskyUnspeccedGetSuggestedStarterPacksSkeleton.QueryParams,
-    opts?: AppBskyUnspeccedGetSuggestedStarterPacksSkeleton.CallOptions,
-  ): Promise<AppBskyUnspeccedGetSuggestedStarterPacksSkeleton.Response> {
-    return this._client.call(
-      'app.bsky.unspecced.getSuggestedStarterPacksSkeleton',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getSuggestedUsers(
-    params?: AppBskyUnspeccedGetSuggestedUsers.QueryParams,
-    opts?: AppBskyUnspeccedGetSuggestedUsers.CallOptions,
-  ): Promise<AppBskyUnspeccedGetSuggestedUsers.Response> {
-    return this._client.call(
-      'app.bsky.unspecced.getSuggestedUsers',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getSuggestedUsersSkeleton(
-    params?: AppBskyUnspeccedGetSuggestedUsersSkeleton.QueryParams,
-    opts?: AppBskyUnspeccedGetSuggestedUsersSkeleton.CallOptions,
-  ): Promise<AppBskyUnspeccedGetSuggestedUsersSkeleton.Response> {
-    return this._client.call(
-      'app.bsky.unspecced.getSuggestedUsersSkeleton',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getSuggestionsSkeleton(
-    params?: AppBskyUnspeccedGetSuggestionsSkeleton.QueryParams,
-    opts?: AppBskyUnspeccedGetSuggestionsSkeleton.CallOptions,
-  ): Promise<AppBskyUnspeccedGetSuggestionsSkeleton.Response> {
-    return this._client.call(
-      'app.bsky.unspecced.getSuggestionsSkeleton',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getTaggedSuggestions(
-    params?: AppBskyUnspeccedGetTaggedSuggestions.QueryParams,
-    opts?: AppBskyUnspeccedGetTaggedSuggestions.CallOptions,
-  ): Promise<AppBskyUnspeccedGetTaggedSuggestions.Response> {
-    return this._client.call(
-      'app.bsky.unspecced.getTaggedSuggestions',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getTrendingTopics(
-    params?: AppBskyUnspeccedGetTrendingTopics.QueryParams,
-    opts?: AppBskyUnspeccedGetTrendingTopics.CallOptions,
-  ): Promise<AppBskyUnspeccedGetTrendingTopics.Response> {
-    return this._client.call(
-      'app.bsky.unspecced.getTrendingTopics',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getTrends(
-    params?: AppBskyUnspeccedGetTrends.QueryParams,
-    opts?: AppBskyUnspeccedGetTrends.CallOptions,
-  ): Promise<AppBskyUnspeccedGetTrends.Response> {
-    return this._client.call(
-      'app.bsky.unspecced.getTrends',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getTrendsSkeleton(
-    params?: AppBskyUnspeccedGetTrendsSkeleton.QueryParams,
-    opts?: AppBskyUnspeccedGetTrendsSkeleton.CallOptions,
-  ): Promise<AppBskyUnspeccedGetTrendsSkeleton.Response> {
-    return this._client.call(
-      'app.bsky.unspecced.getTrendsSkeleton',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  searchActorsSkeleton(
-    params?: AppBskyUnspeccedSearchActorsSkeleton.QueryParams,
-    opts?: AppBskyUnspeccedSearchActorsSkeleton.CallOptions,
-  ): Promise<AppBskyUnspeccedSearchActorsSkeleton.Response> {
-    return this._client
-      .call('app.bsky.unspecced.searchActorsSkeleton', params, undefined, opts)
-      .catch((e) => {
-        throw AppBskyUnspeccedSearchActorsSkeleton.toKnownErr(e)
-      })
-  }
-
-  searchPostsSkeleton(
-    params?: AppBskyUnspeccedSearchPostsSkeleton.QueryParams,
-    opts?: AppBskyUnspeccedSearchPostsSkeleton.CallOptions,
-  ): Promise<AppBskyUnspeccedSearchPostsSkeleton.Response> {
-    return this._client
-      .call('app.bsky.unspecced.searchPostsSkeleton', params, undefined, opts)
-      .catch((e) => {
-        throw AppBskyUnspeccedSearchPostsSkeleton.toKnownErr(e)
-      })
-  }
-
-  searchStarterPacksSkeleton(
-    params?: AppBskyUnspeccedSearchStarterPacksSkeleton.QueryParams,
-    opts?: AppBskyUnspeccedSearchStarterPacksSkeleton.CallOptions,
-  ): Promise<AppBskyUnspeccedSearchStarterPacksSkeleton.Response> {
-    return this._client
-      .call(
-        'app.bsky.unspecced.searchStarterPacksSkeleton',
-        params,
-        undefined,
-        opts,
-      )
-      .catch((e) => {
-        throw AppBskyUnspeccedSearchStarterPacksSkeleton.toKnownErr(e)
-      })
-  }
-}
-
-export class AppBskyVideoNS {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  getJobStatus(
-    params?: AppBskyVideoGetJobStatus.QueryParams,
-    opts?: AppBskyVideoGetJobStatus.CallOptions,
-  ): Promise<AppBskyVideoGetJobStatus.Response> {
-    return this._client.call(
-      'app.bsky.video.getJobStatus',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getUploadLimits(
-    params?: AppBskyVideoGetUploadLimits.QueryParams,
-    opts?: AppBskyVideoGetUploadLimits.CallOptions,
-  ): Promise<AppBskyVideoGetUploadLimits.Response> {
-    return this._client.call(
-      'app.bsky.video.getUploadLimits',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  uploadVideo(
-    data?: AppBskyVideoUploadVideo.InputSchema,
-    opts?: AppBskyVideoUploadVideo.CallOptions,
-  ): Promise<AppBskyVideoUploadVideo.Response> {
-    return this._client.call('app.bsky.video.uploadVideo', opts?.qp, data, opts)
-  }
-}
-
-export class ChatNS {
-  _client: XrpcClient
-  bsky: ChatBskyNS
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.bsky = new ChatBskyNS(client)
-  }
-}
-
-export class ChatBskyNS {
-  _client: XrpcClient
-  actor: ChatBskyActorNS
-  convo: ChatBskyConvoNS
-  moderation: ChatBskyModerationNS
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.actor = new ChatBskyActorNS(client)
-    this.convo = new ChatBskyConvoNS(client)
-    this.moderation = new ChatBskyModerationNS(client)
-  }
-}
-
-export class ChatBskyActorNS {
-  _client: XrpcClient
-  declaration: ChatBskyActorDeclarationRecord
-
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.declaration = new ChatBskyActorDeclarationRecord(client)
-  }
-
-  deleteAccount(
-    data?: ChatBskyActorDeleteAccount.InputSchema,
-    opts?: ChatBskyActorDeleteAccount.CallOptions,
-  ): Promise<ChatBskyActorDeleteAccount.Response> {
-    return this._client.call(
-      'chat.bsky.actor.deleteAccount',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-
-  exportAccountData(
-    params?: ChatBskyActorExportAccountData.QueryParams,
-    opts?: ChatBskyActorExportAccountData.CallOptions,
-  ): Promise<ChatBskyActorExportAccountData.Response> {
-    return this._client.call(
-      'chat.bsky.actor.exportAccountData',
-      params,
-      undefined,
-      opts,
-    )
-  }
-}
-
-export class ChatBskyActorDeclarationRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: ChatBskyActorDeclaration.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'chat.bsky.actor.declaration',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{
-    uri: string
-    cid: string
-    value: ChatBskyActorDeclaration.Record
-  }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'chat.bsky.actor.declaration',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<ChatBskyActorDeclaration.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'chat.bsky.actor.declaration'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      {
-        collection,
-        rkey: 'self',
-        ...params,
-        record: { ...record, $type: collection },
-      },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'chat.bsky.actor.declaration', ...params },
-      { headers },
-    )
-  }
-}
-
-export class ChatBskyConvoNS {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  acceptConvo(
-    data?: ChatBskyConvoAcceptConvo.InputSchema,
-    opts?: ChatBskyConvoAcceptConvo.CallOptions,
-  ): Promise<ChatBskyConvoAcceptConvo.Response> {
-    return this._client.call(
-      'chat.bsky.convo.acceptConvo',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-
-  addReaction(
-    data?: ChatBskyConvoAddReaction.InputSchema,
-    opts?: ChatBskyConvoAddReaction.CallOptions,
-  ): Promise<ChatBskyConvoAddReaction.Response> {
-    return this._client
-      .call('chat.bsky.convo.addReaction', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ChatBskyConvoAddReaction.toKnownErr(e)
-      })
-  }
-
-  deleteMessageForSelf(
-    data?: ChatBskyConvoDeleteMessageForSelf.InputSchema,
-    opts?: ChatBskyConvoDeleteMessageForSelf.CallOptions,
-  ): Promise<ChatBskyConvoDeleteMessageForSelf.Response> {
-    return this._client.call(
-      'chat.bsky.convo.deleteMessageForSelf',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-
-  getConvo(
-    params?: ChatBskyConvoGetConvo.QueryParams,
-    opts?: ChatBskyConvoGetConvo.CallOptions,
-  ): Promise<ChatBskyConvoGetConvo.Response> {
-    return this._client.call(
-      'chat.bsky.convo.getConvo',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getConvoAvailability(
-    params?: ChatBskyConvoGetConvoAvailability.QueryParams,
-    opts?: ChatBskyConvoGetConvoAvailability.CallOptions,
-  ): Promise<ChatBskyConvoGetConvoAvailability.Response> {
-    return this._client.call(
-      'chat.bsky.convo.getConvoAvailability',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getConvoForMembers(
-    params?: ChatBskyConvoGetConvoForMembers.QueryParams,
-    opts?: ChatBskyConvoGetConvoForMembers.CallOptions,
-  ): Promise<ChatBskyConvoGetConvoForMembers.Response> {
-    return this._client.call(
-      'chat.bsky.convo.getConvoForMembers',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getLog(
-    params?: ChatBskyConvoGetLog.QueryParams,
-    opts?: ChatBskyConvoGetLog.CallOptions,
-  ): Promise<ChatBskyConvoGetLog.Response> {
-    return this._client.call('chat.bsky.convo.getLog', params, undefined, opts)
-  }
-
-  getMessages(
-    params?: ChatBskyConvoGetMessages.QueryParams,
-    opts?: ChatBskyConvoGetMessages.CallOptions,
-  ): Promise<ChatBskyConvoGetMessages.Response> {
-    return this._client.call(
-      'chat.bsky.convo.getMessages',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  leaveConvo(
-    data?: ChatBskyConvoLeaveConvo.InputSchema,
-    opts?: ChatBskyConvoLeaveConvo.CallOptions,
-  ): Promise<ChatBskyConvoLeaveConvo.Response> {
-    return this._client.call('chat.bsky.convo.leaveConvo', opts?.qp, data, opts)
-  }
-
-  listConvos(
-    params?: ChatBskyConvoListConvos.QueryParams,
-    opts?: ChatBskyConvoListConvos.CallOptions,
-  ): Promise<ChatBskyConvoListConvos.Response> {
-    return this._client.call(
-      'chat.bsky.convo.listConvos',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  muteConvo(
-    data?: ChatBskyConvoMuteConvo.InputSchema,
-    opts?: ChatBskyConvoMuteConvo.CallOptions,
-  ): Promise<ChatBskyConvoMuteConvo.Response> {
-    return this._client.call('chat.bsky.convo.muteConvo', opts?.qp, data, opts)
-  }
-
-  removeReaction(
-    data?: ChatBskyConvoRemoveReaction.InputSchema,
-    opts?: ChatBskyConvoRemoveReaction.CallOptions,
-  ): Promise<ChatBskyConvoRemoveReaction.Response> {
-    return this._client
-      .call('chat.bsky.convo.removeReaction', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ChatBskyConvoRemoveReaction.toKnownErr(e)
-      })
-  }
-
-  sendMessage(
-    data?: ChatBskyConvoSendMessage.InputSchema,
-    opts?: ChatBskyConvoSendMessage.CallOptions,
-  ): Promise<ChatBskyConvoSendMessage.Response> {
-    return this._client.call(
-      'chat.bsky.convo.sendMessage',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-
-  sendMessageBatch(
-    data?: ChatBskyConvoSendMessageBatch.InputSchema,
-    opts?: ChatBskyConvoSendMessageBatch.CallOptions,
-  ): Promise<ChatBskyConvoSendMessageBatch.Response> {
-    return this._client.call(
-      'chat.bsky.convo.sendMessageBatch',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-
-  unmuteConvo(
-    data?: ChatBskyConvoUnmuteConvo.InputSchema,
-    opts?: ChatBskyConvoUnmuteConvo.CallOptions,
-  ): Promise<ChatBskyConvoUnmuteConvo.Response> {
-    return this._client.call(
-      'chat.bsky.convo.unmuteConvo',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-
-  updateAllRead(
-    data?: ChatBskyConvoUpdateAllRead.InputSchema,
-    opts?: ChatBskyConvoUpdateAllRead.CallOptions,
-  ): Promise<ChatBskyConvoUpdateAllRead.Response> {
-    return this._client.call(
-      'chat.bsky.convo.updateAllRead',
-      opts?.qp,
-      data,
-      opts,
-    )
-  }
-
-  updateRead(
-    data?: ChatBskyConvoUpdateRead.InputSchema,
-    opts?: ChatBskyConvoUpdateRead.CallOptions,
-  ): Promise<ChatBskyConvoUpdateRead.Response> {
-    return this._client.call('chat.bsky.convo.updateRead', opts?.qp, data, opts)
-  }
-}
-
-export class ChatBskyModerationNS {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  getActorMetadata(
-    params?: ChatBskyModerationGetActorMetadata.QueryParams,
-    opts?: ChatBskyModerationGetActorMetadata.CallOptions,
-  ): Promise<ChatBskyModerationGetActorMetadata.Response> {
-    return this._client.call(
-      'chat.bsky.moderation.getActorMetadata',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  getMessageContext(
-    params?: ChatBskyModerationGetMessageContext.QueryParams,
-    opts?: ChatBskyModerationGetMessageContext.CallOptions,
-  ): Promise<ChatBskyModerationGetMessageContext.Response> {
-    return this._client.call(
-      'chat.bsky.moderation.getMessageContext',
-      params,
-      undefined,
-      opts,
-    )
-  }
-
-  updateActorAccess(
-    data?: ChatBskyModerationUpdateActorAccess.InputSchema,
-    opts?: ChatBskyModerationUpdateActorAccess.CallOptions,
-  ): Promise<ChatBskyModerationUpdateActorAccess.Response> {
-    return this._client.call(
-      'chat.bsky.moderation.updateActorAccess',
-      opts?.qp,
-      data,
-      opts,
-    )
   }
 }
 
 export class ComNS {
-  _client: XrpcClient
+  _server: Server
   atproto: ComAtprotoNS
 
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.atproto = new ComAtprotoNS(client)
+  constructor(server: Server) {
+    this._server = server
+    this.atproto = new ComAtprotoNS(server)
   }
 }
 
 export class ComAtprotoNS {
-  _client: XrpcClient
+  _server: Server
   admin: ComAtprotoAdminNS
   identity: ComAtprotoIdentityNS
   label: ComAtprotoLabelNS
@@ -2855,1101 +306,2191 @@ export class ComAtprotoNS {
   sync: ComAtprotoSyncNS
   temp: ComAtprotoTempNS
 
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.admin = new ComAtprotoAdminNS(client)
-    this.identity = new ComAtprotoIdentityNS(client)
-    this.label = new ComAtprotoLabelNS(client)
-    this.lexicon = new ComAtprotoLexiconNS(client)
-    this.moderation = new ComAtprotoModerationNS(client)
-    this.repo = new ComAtprotoRepoNS(client)
-    this.server = new ComAtprotoServerNS(client)
-    this.sync = new ComAtprotoSyncNS(client)
-    this.temp = new ComAtprotoTempNS(client)
+  constructor(server: Server) {
+    this._server = server
+    this.admin = new ComAtprotoAdminNS(server)
+    this.identity = new ComAtprotoIdentityNS(server)
+    this.label = new ComAtprotoLabelNS(server)
+    this.lexicon = new ComAtprotoLexiconNS(server)
+    this.moderation = new ComAtprotoModerationNS(server)
+    this.repo = new ComAtprotoRepoNS(server)
+    this.server = new ComAtprotoServerNS(server)
+    this.sync = new ComAtprotoSyncNS(server)
+    this.temp = new ComAtprotoTempNS(server)
   }
 }
 
 export class ComAtprotoAdminNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  deleteAccount(
-    data?: ComAtprotoAdminDeleteAccount.InputSchema,
-    opts?: ComAtprotoAdminDeleteAccount.CallOptions,
-  ): Promise<ComAtprotoAdminDeleteAccount.Response> {
-    return this._client.call(
-      'com.atproto.admin.deleteAccount',
-      opts?.qp,
-      data,
-      opts,
-    )
+  deleteAccount<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminDeleteAccount.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminDeleteAccount.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.deleteAccount' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  disableAccountInvites(
-    data?: ComAtprotoAdminDisableAccountInvites.InputSchema,
-    opts?: ComAtprotoAdminDisableAccountInvites.CallOptions,
-  ): Promise<ComAtprotoAdminDisableAccountInvites.Response> {
-    return this._client.call(
-      'com.atproto.admin.disableAccountInvites',
-      opts?.qp,
-      data,
-      opts,
-    )
+  disableAccountInvites<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminDisableAccountInvites.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminDisableAccountInvites.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.disableAccountInvites' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  disableInviteCodes(
-    data?: ComAtprotoAdminDisableInviteCodes.InputSchema,
-    opts?: ComAtprotoAdminDisableInviteCodes.CallOptions,
-  ): Promise<ComAtprotoAdminDisableInviteCodes.Response> {
-    return this._client.call(
-      'com.atproto.admin.disableInviteCodes',
-      opts?.qp,
-      data,
-      opts,
-    )
+  disableInviteCodes<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminDisableInviteCodes.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminDisableInviteCodes.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.disableInviteCodes' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  enableAccountInvites(
-    data?: ComAtprotoAdminEnableAccountInvites.InputSchema,
-    opts?: ComAtprotoAdminEnableAccountInvites.CallOptions,
-  ): Promise<ComAtprotoAdminEnableAccountInvites.Response> {
-    return this._client.call(
-      'com.atproto.admin.enableAccountInvites',
-      opts?.qp,
-      data,
-      opts,
-    )
+  enableAccountInvites<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminEnableAccountInvites.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminEnableAccountInvites.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.enableAccountInvites' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getAccountInfo(
-    params?: ComAtprotoAdminGetAccountInfo.QueryParams,
-    opts?: ComAtprotoAdminGetAccountInfo.CallOptions,
-  ): Promise<ComAtprotoAdminGetAccountInfo.Response> {
-    return this._client.call(
-      'com.atproto.admin.getAccountInfo',
-      params,
-      undefined,
-      opts,
-    )
+  getAccountInfo<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminGetAccountInfo.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminGetAccountInfo.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.getAccountInfo' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getAccountInfos(
-    params?: ComAtprotoAdminGetAccountInfos.QueryParams,
-    opts?: ComAtprotoAdminGetAccountInfos.CallOptions,
-  ): Promise<ComAtprotoAdminGetAccountInfos.Response> {
-    return this._client.call(
-      'com.atproto.admin.getAccountInfos',
-      params,
-      undefined,
-      opts,
-    )
+  getAccountInfos<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminGetAccountInfos.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminGetAccountInfos.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.getAccountInfos' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getInviteCodes(
-    params?: ComAtprotoAdminGetInviteCodes.QueryParams,
-    opts?: ComAtprotoAdminGetInviteCodes.CallOptions,
-  ): Promise<ComAtprotoAdminGetInviteCodes.Response> {
-    return this._client.call(
-      'com.atproto.admin.getInviteCodes',
-      params,
-      undefined,
-      opts,
-    )
+  getInviteCodes<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminGetInviteCodes.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminGetInviteCodes.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.getInviteCodes' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getSubjectStatus(
-    params?: ComAtprotoAdminGetSubjectStatus.QueryParams,
-    opts?: ComAtprotoAdminGetSubjectStatus.CallOptions,
-  ): Promise<ComAtprotoAdminGetSubjectStatus.Response> {
-    return this._client.call(
-      'com.atproto.admin.getSubjectStatus',
-      params,
-      undefined,
-      opts,
-    )
+  getSubjectStatus<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminGetSubjectStatus.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminGetSubjectStatus.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.getSubjectStatus' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  searchAccounts(
-    params?: ComAtprotoAdminSearchAccounts.QueryParams,
-    opts?: ComAtprotoAdminSearchAccounts.CallOptions,
-  ): Promise<ComAtprotoAdminSearchAccounts.Response> {
-    return this._client.call(
-      'com.atproto.admin.searchAccounts',
-      params,
-      undefined,
-      opts,
-    )
+  searchAccounts<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminSearchAccounts.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminSearchAccounts.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.searchAccounts' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  sendEmail(
-    data?: ComAtprotoAdminSendEmail.InputSchema,
-    opts?: ComAtprotoAdminSendEmail.CallOptions,
-  ): Promise<ComAtprotoAdminSendEmail.Response> {
-    return this._client.call(
-      'com.atproto.admin.sendEmail',
-      opts?.qp,
-      data,
-      opts,
-    )
+  sendEmail<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminSendEmail.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminSendEmail.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.sendEmail' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  updateAccountEmail(
-    data?: ComAtprotoAdminUpdateAccountEmail.InputSchema,
-    opts?: ComAtprotoAdminUpdateAccountEmail.CallOptions,
-  ): Promise<ComAtprotoAdminUpdateAccountEmail.Response> {
-    return this._client.call(
-      'com.atproto.admin.updateAccountEmail',
-      opts?.qp,
-      data,
-      opts,
-    )
+  updateAccountEmail<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminUpdateAccountEmail.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminUpdateAccountEmail.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.updateAccountEmail' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  updateAccountHandle(
-    data?: ComAtprotoAdminUpdateAccountHandle.InputSchema,
-    opts?: ComAtprotoAdminUpdateAccountHandle.CallOptions,
-  ): Promise<ComAtprotoAdminUpdateAccountHandle.Response> {
-    return this._client.call(
-      'com.atproto.admin.updateAccountHandle',
-      opts?.qp,
-      data,
-      opts,
-    )
+  updateAccountHandle<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminUpdateAccountHandle.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminUpdateAccountHandle.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.updateAccountHandle' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  updateAccountPassword(
-    data?: ComAtprotoAdminUpdateAccountPassword.InputSchema,
-    opts?: ComAtprotoAdminUpdateAccountPassword.CallOptions,
-  ): Promise<ComAtprotoAdminUpdateAccountPassword.Response> {
-    return this._client.call(
-      'com.atproto.admin.updateAccountPassword',
-      opts?.qp,
-      data,
-      opts,
-    )
+  updateAccountPassword<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminUpdateAccountPassword.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminUpdateAccountPassword.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.updateAccountPassword' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  updateAccountSigningKey(
-    data?: ComAtprotoAdminUpdateAccountSigningKey.InputSchema,
-    opts?: ComAtprotoAdminUpdateAccountSigningKey.CallOptions,
-  ): Promise<ComAtprotoAdminUpdateAccountSigningKey.Response> {
-    return this._client.call(
-      'com.atproto.admin.updateAccountSigningKey',
-      opts?.qp,
-      data,
-      opts,
-    )
+  updateAccountSigningKey<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminUpdateAccountSigningKey.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminUpdateAccountSigningKey.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.updateAccountSigningKey' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  updateSubjectStatus(
-    data?: ComAtprotoAdminUpdateSubjectStatus.InputSchema,
-    opts?: ComAtprotoAdminUpdateSubjectStatus.CallOptions,
-  ): Promise<ComAtprotoAdminUpdateSubjectStatus.Response> {
-    return this._client.call(
-      'com.atproto.admin.updateSubjectStatus',
-      opts?.qp,
-      data,
-      opts,
-    )
+  updateSubjectStatus<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoAdminUpdateSubjectStatus.Handler<ExtractAuth<AV>>,
+      ComAtprotoAdminUpdateSubjectStatus.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.admin.updateSubjectStatus' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ComAtprotoIdentityNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  getRecommendedDidCredentials(
-    params?: ComAtprotoIdentityGetRecommendedDidCredentials.QueryParams,
-    opts?: ComAtprotoIdentityGetRecommendedDidCredentials.CallOptions,
-  ): Promise<ComAtprotoIdentityGetRecommendedDidCredentials.Response> {
-    return this._client.call(
-      'com.atproto.identity.getRecommendedDidCredentials',
-      params,
-      undefined,
-      opts,
-    )
+  getRecommendedDidCredentials<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoIdentityGetRecommendedDidCredentials.Handler<ExtractAuth<AV>>,
+      ComAtprotoIdentityGetRecommendedDidCredentials.HandlerReqCtx<
+        ExtractAuth<AV>
+      >
+    >,
+  ) {
+    const nsid = 'com.atproto.identity.getRecommendedDidCredentials' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  refreshIdentity(
-    data?: ComAtprotoIdentityRefreshIdentity.InputSchema,
-    opts?: ComAtprotoIdentityRefreshIdentity.CallOptions,
-  ): Promise<ComAtprotoIdentityRefreshIdentity.Response> {
-    return this._client
-      .call('com.atproto.identity.refreshIdentity', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoIdentityRefreshIdentity.toKnownErr(e)
-      })
+  refreshIdentity<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoIdentityRefreshIdentity.Handler<ExtractAuth<AV>>,
+      ComAtprotoIdentityRefreshIdentity.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.identity.refreshIdentity' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  requestPlcOperationSignature(
-    data?: ComAtprotoIdentityRequestPlcOperationSignature.InputSchema,
-    opts?: ComAtprotoIdentityRequestPlcOperationSignature.CallOptions,
-  ): Promise<ComAtprotoIdentityRequestPlcOperationSignature.Response> {
-    return this._client.call(
-      'com.atproto.identity.requestPlcOperationSignature',
-      opts?.qp,
-      data,
-      opts,
-    )
+  requestPlcOperationSignature<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoIdentityRequestPlcOperationSignature.Handler<ExtractAuth<AV>>,
+      ComAtprotoIdentityRequestPlcOperationSignature.HandlerReqCtx<
+        ExtractAuth<AV>
+      >
+    >,
+  ) {
+    const nsid = 'com.atproto.identity.requestPlcOperationSignature' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  resolveDid(
-    params?: ComAtprotoIdentityResolveDid.QueryParams,
-    opts?: ComAtprotoIdentityResolveDid.CallOptions,
-  ): Promise<ComAtprotoIdentityResolveDid.Response> {
-    return this._client
-      .call('com.atproto.identity.resolveDid', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoIdentityResolveDid.toKnownErr(e)
-      })
+  resolveDid<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoIdentityResolveDid.Handler<ExtractAuth<AV>>,
+      ComAtprotoIdentityResolveDid.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.identity.resolveDid' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  resolveHandle(
-    params?: ComAtprotoIdentityResolveHandle.QueryParams,
-    opts?: ComAtprotoIdentityResolveHandle.CallOptions,
-  ): Promise<ComAtprotoIdentityResolveHandle.Response> {
-    return this._client
-      .call('com.atproto.identity.resolveHandle', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoIdentityResolveHandle.toKnownErr(e)
-      })
+  resolveHandle<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoIdentityResolveHandle.Handler<ExtractAuth<AV>>,
+      ComAtprotoIdentityResolveHandle.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.identity.resolveHandle' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  resolveIdentity(
-    params?: ComAtprotoIdentityResolveIdentity.QueryParams,
-    opts?: ComAtprotoIdentityResolveIdentity.CallOptions,
-  ): Promise<ComAtprotoIdentityResolveIdentity.Response> {
-    return this._client
-      .call('com.atproto.identity.resolveIdentity', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoIdentityResolveIdentity.toKnownErr(e)
-      })
+  resolveIdentity<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoIdentityResolveIdentity.Handler<ExtractAuth<AV>>,
+      ComAtprotoIdentityResolveIdentity.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.identity.resolveIdentity' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  signPlcOperation(
-    data?: ComAtprotoIdentitySignPlcOperation.InputSchema,
-    opts?: ComAtprotoIdentitySignPlcOperation.CallOptions,
-  ): Promise<ComAtprotoIdentitySignPlcOperation.Response> {
-    return this._client.call(
-      'com.atproto.identity.signPlcOperation',
-      opts?.qp,
-      data,
-      opts,
-    )
+  signPlcOperation<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoIdentitySignPlcOperation.Handler<ExtractAuth<AV>>,
+      ComAtprotoIdentitySignPlcOperation.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.identity.signPlcOperation' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  submitPlcOperation(
-    data?: ComAtprotoIdentitySubmitPlcOperation.InputSchema,
-    opts?: ComAtprotoIdentitySubmitPlcOperation.CallOptions,
-  ): Promise<ComAtprotoIdentitySubmitPlcOperation.Response> {
-    return this._client.call(
-      'com.atproto.identity.submitPlcOperation',
-      opts?.qp,
-      data,
-      opts,
-    )
+  submitPlcOperation<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoIdentitySubmitPlcOperation.Handler<ExtractAuth<AV>>,
+      ComAtprotoIdentitySubmitPlcOperation.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.identity.submitPlcOperation' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  updateHandle(
-    data?: ComAtprotoIdentityUpdateHandle.InputSchema,
-    opts?: ComAtprotoIdentityUpdateHandle.CallOptions,
-  ): Promise<ComAtprotoIdentityUpdateHandle.Response> {
-    return this._client.call(
-      'com.atproto.identity.updateHandle',
-      opts?.qp,
-      data,
-      opts,
-    )
+  updateHandle<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoIdentityUpdateHandle.Handler<ExtractAuth<AV>>,
+      ComAtprotoIdentityUpdateHandle.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.identity.updateHandle' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ComAtprotoLabelNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  queryLabels(
-    params?: ComAtprotoLabelQueryLabels.QueryParams,
-    opts?: ComAtprotoLabelQueryLabels.CallOptions,
-  ): Promise<ComAtprotoLabelQueryLabels.Response> {
-    return this._client.call(
-      'com.atproto.label.queryLabels',
-      params,
-      undefined,
-      opts,
-    )
+  queryLabels<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoLabelQueryLabels.Handler<ExtractAuth<AV>>,
+      ComAtprotoLabelQueryLabels.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.label.queryLabels' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  subscribeLabels<AV extends StreamAuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoLabelSubscribeLabels.Handler<ExtractAuth<AV>>,
+      ComAtprotoLabelSubscribeLabels.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.label.subscribeLabels' // @ts-ignore
+    return this._server.xrpc.streamMethod(nsid, cfg)
   }
 }
 
 export class ComAtprotoLexiconNS {
-  _client: XrpcClient
-  schema: ComAtprotoLexiconSchemaRecord
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.schema = new ComAtprotoLexiconSchemaRecord(client)
-  }
-}
-
-export class ComAtprotoLexiconSchemaRecord {
-  _client: XrpcClient
-
-  constructor(client: XrpcClient) {
-    this._client = client
-  }
-
-  async list(
-    params: OmitKey<ComAtprotoRepoListRecords.QueryParams, 'collection'>,
-  ): Promise<{
-    cursor?: string
-    records: { uri: string; value: ComAtprotoLexiconSchema.Record }[]
-  }> {
-    const res = await this._client.call('com.atproto.repo.listRecords', {
-      collection: 'com.atproto.lexicon.schema',
-      ...params,
-    })
-    return res.data
-  }
-
-  async get(
-    params: OmitKey<ComAtprotoRepoGetRecord.QueryParams, 'collection'>,
-  ): Promise<{
-    uri: string
-    cid: string
-    value: ComAtprotoLexiconSchema.Record
-  }> {
-    const res = await this._client.call('com.atproto.repo.getRecord', {
-      collection: 'com.atproto.lexicon.schema',
-      ...params,
-    })
-    return res.data
-  }
-
-  async create(
-    params: OmitKey<
-      ComAtprotoRepoCreateRecord.InputSchema,
-      'collection' | 'record'
-    >,
-    record: Un$Typed<ComAtprotoLexiconSchema.Record>,
-    headers?: Record<string, string>,
-  ): Promise<{ uri: string; cid: string }> {
-    const collection = 'com.atproto.lexicon.schema'
-    const res = await this._client.call(
-      'com.atproto.repo.createRecord',
-      undefined,
-      { collection, ...params, record: { ...record, $type: collection } },
-      { encoding: 'application/json', headers },
-    )
-    return res.data
-  }
-
-  async delete(
-    params: OmitKey<ComAtprotoRepoDeleteRecord.InputSchema, 'collection'>,
-    headers?: Record<string, string>,
-  ): Promise<void> {
-    await this._client.call(
-      'com.atproto.repo.deleteRecord',
-      undefined,
-      { collection: 'com.atproto.lexicon.schema', ...params },
-      { headers },
-    )
+  constructor(server: Server) {
+    this._server = server
   }
 }
 
 export class ComAtprotoModerationNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  createReport(
-    data?: ComAtprotoModerationCreateReport.InputSchema,
-    opts?: ComAtprotoModerationCreateReport.CallOptions,
-  ): Promise<ComAtprotoModerationCreateReport.Response> {
-    return this._client.call(
-      'com.atproto.moderation.createReport',
-      opts?.qp,
-      data,
-      opts,
-    )
+  createReport<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoModerationCreateReport.Handler<ExtractAuth<AV>>,
+      ComAtprotoModerationCreateReport.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.moderation.createReport' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ComAtprotoRepoNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  applyWrites(
-    data?: ComAtprotoRepoApplyWrites.InputSchema,
-    opts?: ComAtprotoRepoApplyWrites.CallOptions,
-  ): Promise<ComAtprotoRepoApplyWrites.Response> {
-    return this._client
-      .call('com.atproto.repo.applyWrites', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoRepoApplyWrites.toKnownErr(e)
-      })
+  applyWrites<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoRepoApplyWrites.Handler<ExtractAuth<AV>>,
+      ComAtprotoRepoApplyWrites.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.repo.applyWrites' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  createRecord(
-    data?: ComAtprotoRepoCreateRecord.InputSchema,
-    opts?: ComAtprotoRepoCreateRecord.CallOptions,
-  ): Promise<ComAtprotoRepoCreateRecord.Response> {
-    return this._client
-      .call('com.atproto.repo.createRecord', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoRepoCreateRecord.toKnownErr(e)
-      })
+  createRecord<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoRepoCreateRecord.Handler<ExtractAuth<AV>>,
+      ComAtprotoRepoCreateRecord.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.repo.createRecord' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  deleteRecord(
-    data?: ComAtprotoRepoDeleteRecord.InputSchema,
-    opts?: ComAtprotoRepoDeleteRecord.CallOptions,
-  ): Promise<ComAtprotoRepoDeleteRecord.Response> {
-    return this._client
-      .call('com.atproto.repo.deleteRecord', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoRepoDeleteRecord.toKnownErr(e)
-      })
+  deleteRecord<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoRepoDeleteRecord.Handler<ExtractAuth<AV>>,
+      ComAtprotoRepoDeleteRecord.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.repo.deleteRecord' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  describeRepo(
-    params?: ComAtprotoRepoDescribeRepo.QueryParams,
-    opts?: ComAtprotoRepoDescribeRepo.CallOptions,
-  ): Promise<ComAtprotoRepoDescribeRepo.Response> {
-    return this._client.call(
-      'com.atproto.repo.describeRepo',
-      params,
-      undefined,
-      opts,
-    )
+  describeRepo<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoRepoDescribeRepo.Handler<ExtractAuth<AV>>,
+      ComAtprotoRepoDescribeRepo.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.repo.describeRepo' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getRecord(
-    params?: ComAtprotoRepoGetRecord.QueryParams,
-    opts?: ComAtprotoRepoGetRecord.CallOptions,
-  ): Promise<ComAtprotoRepoGetRecord.Response> {
-    return this._client
-      .call('com.atproto.repo.getRecord', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoRepoGetRecord.toKnownErr(e)
-      })
+  getRecord<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoRepoGetRecord.Handler<ExtractAuth<AV>>,
+      ComAtprotoRepoGetRecord.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.repo.getRecord' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  importRepo(
-    data?: ComAtprotoRepoImportRepo.InputSchema,
-    opts?: ComAtprotoRepoImportRepo.CallOptions,
-  ): Promise<ComAtprotoRepoImportRepo.Response> {
-    return this._client.call(
-      'com.atproto.repo.importRepo',
-      opts?.qp,
-      data,
-      opts,
-    )
+  importRepo<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoRepoImportRepo.Handler<ExtractAuth<AV>>,
+      ComAtprotoRepoImportRepo.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.repo.importRepo' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  listMissingBlobs(
-    params?: ComAtprotoRepoListMissingBlobs.QueryParams,
-    opts?: ComAtprotoRepoListMissingBlobs.CallOptions,
-  ): Promise<ComAtprotoRepoListMissingBlobs.Response> {
-    return this._client.call(
-      'com.atproto.repo.listMissingBlobs',
-      params,
-      undefined,
-      opts,
-    )
+  listMissingBlobs<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoRepoListMissingBlobs.Handler<ExtractAuth<AV>>,
+      ComAtprotoRepoListMissingBlobs.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.repo.listMissingBlobs' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  listRecords(
-    params?: ComAtprotoRepoListRecords.QueryParams,
-    opts?: ComAtprotoRepoListRecords.CallOptions,
-  ): Promise<ComAtprotoRepoListRecords.Response> {
-    return this._client.call(
-      'com.atproto.repo.listRecords',
-      params,
-      undefined,
-      opts,
-    )
+  listRecords<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoRepoListRecords.Handler<ExtractAuth<AV>>,
+      ComAtprotoRepoListRecords.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.repo.listRecords' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  putRecord(
-    data?: ComAtprotoRepoPutRecord.InputSchema,
-    opts?: ComAtprotoRepoPutRecord.CallOptions,
-  ): Promise<ComAtprotoRepoPutRecord.Response> {
-    return this._client
-      .call('com.atproto.repo.putRecord', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoRepoPutRecord.toKnownErr(e)
-      })
+  putRecord<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoRepoPutRecord.Handler<ExtractAuth<AV>>,
+      ComAtprotoRepoPutRecord.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.repo.putRecord' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  uploadBlob(
-    data?: ComAtprotoRepoUploadBlob.InputSchema,
-    opts?: ComAtprotoRepoUploadBlob.CallOptions,
-  ): Promise<ComAtprotoRepoUploadBlob.Response> {
-    return this._client.call(
-      'com.atproto.repo.uploadBlob',
-      opts?.qp,
-      data,
-      opts,
-    )
+  uploadBlob<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoRepoUploadBlob.Handler<ExtractAuth<AV>>,
+      ComAtprotoRepoUploadBlob.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.repo.uploadBlob' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ComAtprotoServerNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  activateAccount(
-    data?: ComAtprotoServerActivateAccount.InputSchema,
-    opts?: ComAtprotoServerActivateAccount.CallOptions,
-  ): Promise<ComAtprotoServerActivateAccount.Response> {
-    return this._client.call(
-      'com.atproto.server.activateAccount',
-      opts?.qp,
-      data,
-      opts,
-    )
+  activateAccount<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerActivateAccount.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerActivateAccount.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.activateAccount' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  checkAccountStatus(
-    params?: ComAtprotoServerCheckAccountStatus.QueryParams,
-    opts?: ComAtprotoServerCheckAccountStatus.CallOptions,
-  ): Promise<ComAtprotoServerCheckAccountStatus.Response> {
-    return this._client.call(
-      'com.atproto.server.checkAccountStatus',
-      params,
-      undefined,
-      opts,
-    )
+  checkAccountStatus<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerCheckAccountStatus.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerCheckAccountStatus.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.checkAccountStatus' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  confirmEmail(
-    data?: ComAtprotoServerConfirmEmail.InputSchema,
-    opts?: ComAtprotoServerConfirmEmail.CallOptions,
-  ): Promise<ComAtprotoServerConfirmEmail.Response> {
-    return this._client
-      .call('com.atproto.server.confirmEmail', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoServerConfirmEmail.toKnownErr(e)
-      })
+  confirmEmail<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerConfirmEmail.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerConfirmEmail.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.confirmEmail' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  createAccount(
-    data?: ComAtprotoServerCreateAccount.InputSchema,
-    opts?: ComAtprotoServerCreateAccount.CallOptions,
-  ): Promise<ComAtprotoServerCreateAccount.Response> {
-    return this._client
-      .call('com.atproto.server.createAccount', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoServerCreateAccount.toKnownErr(e)
-      })
+  createAccount<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerCreateAccount.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerCreateAccount.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.createAccount' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  createAppPassword(
-    data?: ComAtprotoServerCreateAppPassword.InputSchema,
-    opts?: ComAtprotoServerCreateAppPassword.CallOptions,
-  ): Promise<ComAtprotoServerCreateAppPassword.Response> {
-    return this._client
-      .call('com.atproto.server.createAppPassword', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoServerCreateAppPassword.toKnownErr(e)
-      })
+  createAppPassword<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerCreateAppPassword.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerCreateAppPassword.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.createAppPassword' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  createInviteCode(
-    data?: ComAtprotoServerCreateInviteCode.InputSchema,
-    opts?: ComAtprotoServerCreateInviteCode.CallOptions,
-  ): Promise<ComAtprotoServerCreateInviteCode.Response> {
-    return this._client.call(
-      'com.atproto.server.createInviteCode',
-      opts?.qp,
-      data,
-      opts,
-    )
+  createInviteCode<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerCreateInviteCode.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerCreateInviteCode.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.createInviteCode' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  createInviteCodes(
-    data?: ComAtprotoServerCreateInviteCodes.InputSchema,
-    opts?: ComAtprotoServerCreateInviteCodes.CallOptions,
-  ): Promise<ComAtprotoServerCreateInviteCodes.Response> {
-    return this._client.call(
-      'com.atproto.server.createInviteCodes',
-      opts?.qp,
-      data,
-      opts,
-    )
+  createInviteCodes<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerCreateInviteCodes.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerCreateInviteCodes.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.createInviteCodes' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  createSession(
-    data?: ComAtprotoServerCreateSession.InputSchema,
-    opts?: ComAtprotoServerCreateSession.CallOptions,
-  ): Promise<ComAtprotoServerCreateSession.Response> {
-    return this._client
-      .call('com.atproto.server.createSession', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoServerCreateSession.toKnownErr(e)
-      })
+  createSession<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerCreateSession.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerCreateSession.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.createSession' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  deactivateAccount(
-    data?: ComAtprotoServerDeactivateAccount.InputSchema,
-    opts?: ComAtprotoServerDeactivateAccount.CallOptions,
-  ): Promise<ComAtprotoServerDeactivateAccount.Response> {
-    return this._client.call(
-      'com.atproto.server.deactivateAccount',
-      opts?.qp,
-      data,
-      opts,
-    )
+  deactivateAccount<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerDeactivateAccount.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerDeactivateAccount.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.deactivateAccount' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  deleteAccount(
-    data?: ComAtprotoServerDeleteAccount.InputSchema,
-    opts?: ComAtprotoServerDeleteAccount.CallOptions,
-  ): Promise<ComAtprotoServerDeleteAccount.Response> {
-    return this._client
-      .call('com.atproto.server.deleteAccount', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoServerDeleteAccount.toKnownErr(e)
-      })
+  deleteAccount<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerDeleteAccount.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerDeleteAccount.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.deleteAccount' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  deleteSession(
-    data?: ComAtprotoServerDeleteSession.InputSchema,
-    opts?: ComAtprotoServerDeleteSession.CallOptions,
-  ): Promise<ComAtprotoServerDeleteSession.Response> {
-    return this._client.call(
-      'com.atproto.server.deleteSession',
-      opts?.qp,
-      data,
-      opts,
-    )
+  deleteSession<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerDeleteSession.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerDeleteSession.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.deleteSession' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  describeServer(
-    params?: ComAtprotoServerDescribeServer.QueryParams,
-    opts?: ComAtprotoServerDescribeServer.CallOptions,
-  ): Promise<ComAtprotoServerDescribeServer.Response> {
-    return this._client.call(
-      'com.atproto.server.describeServer',
-      params,
-      undefined,
-      opts,
-    )
+  describeServer<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerDescribeServer.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerDescribeServer.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.describeServer' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getAccountInviteCodes(
-    params?: ComAtprotoServerGetAccountInviteCodes.QueryParams,
-    opts?: ComAtprotoServerGetAccountInviteCodes.CallOptions,
-  ): Promise<ComAtprotoServerGetAccountInviteCodes.Response> {
-    return this._client
-      .call('com.atproto.server.getAccountInviteCodes', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoServerGetAccountInviteCodes.toKnownErr(e)
-      })
+  getAccountInviteCodes<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerGetAccountInviteCodes.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerGetAccountInviteCodes.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.getAccountInviteCodes' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getServiceAuth(
-    params?: ComAtprotoServerGetServiceAuth.QueryParams,
-    opts?: ComAtprotoServerGetServiceAuth.CallOptions,
-  ): Promise<ComAtprotoServerGetServiceAuth.Response> {
-    return this._client
-      .call('com.atproto.server.getServiceAuth', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoServerGetServiceAuth.toKnownErr(e)
-      })
+  getServiceAuth<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerGetServiceAuth.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerGetServiceAuth.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.getServiceAuth' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getSession(
-    params?: ComAtprotoServerGetSession.QueryParams,
-    opts?: ComAtprotoServerGetSession.CallOptions,
-  ): Promise<ComAtprotoServerGetSession.Response> {
-    return this._client.call(
-      'com.atproto.server.getSession',
-      params,
-      undefined,
-      opts,
-    )
+  getSession<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerGetSession.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerGetSession.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.getSession' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  listAppPasswords(
-    params?: ComAtprotoServerListAppPasswords.QueryParams,
-    opts?: ComAtprotoServerListAppPasswords.CallOptions,
-  ): Promise<ComAtprotoServerListAppPasswords.Response> {
-    return this._client
-      .call('com.atproto.server.listAppPasswords', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoServerListAppPasswords.toKnownErr(e)
-      })
+  listAppPasswords<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerListAppPasswords.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerListAppPasswords.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.listAppPasswords' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  refreshSession(
-    data?: ComAtprotoServerRefreshSession.InputSchema,
-    opts?: ComAtprotoServerRefreshSession.CallOptions,
-  ): Promise<ComAtprotoServerRefreshSession.Response> {
-    return this._client
-      .call('com.atproto.server.refreshSession', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoServerRefreshSession.toKnownErr(e)
-      })
+  refreshSession<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerRefreshSession.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerRefreshSession.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.refreshSession' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  requestAccountDelete(
-    data?: ComAtprotoServerRequestAccountDelete.InputSchema,
-    opts?: ComAtprotoServerRequestAccountDelete.CallOptions,
-  ): Promise<ComAtprotoServerRequestAccountDelete.Response> {
-    return this._client.call(
-      'com.atproto.server.requestAccountDelete',
-      opts?.qp,
-      data,
-      opts,
-    )
+  requestAccountDelete<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerRequestAccountDelete.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerRequestAccountDelete.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.requestAccountDelete' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  requestEmailConfirmation(
-    data?: ComAtprotoServerRequestEmailConfirmation.InputSchema,
-    opts?: ComAtprotoServerRequestEmailConfirmation.CallOptions,
-  ): Promise<ComAtprotoServerRequestEmailConfirmation.Response> {
-    return this._client.call(
-      'com.atproto.server.requestEmailConfirmation',
-      opts?.qp,
-      data,
-      opts,
-    )
+  requestEmailConfirmation<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerRequestEmailConfirmation.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerRequestEmailConfirmation.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.requestEmailConfirmation' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  requestEmailUpdate(
-    data?: ComAtprotoServerRequestEmailUpdate.InputSchema,
-    opts?: ComAtprotoServerRequestEmailUpdate.CallOptions,
-  ): Promise<ComAtprotoServerRequestEmailUpdate.Response> {
-    return this._client.call(
-      'com.atproto.server.requestEmailUpdate',
-      opts?.qp,
-      data,
-      opts,
-    )
+  requestEmailUpdate<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerRequestEmailUpdate.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerRequestEmailUpdate.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.requestEmailUpdate' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  requestPasswordReset(
-    data?: ComAtprotoServerRequestPasswordReset.InputSchema,
-    opts?: ComAtprotoServerRequestPasswordReset.CallOptions,
-  ): Promise<ComAtprotoServerRequestPasswordReset.Response> {
-    return this._client.call(
-      'com.atproto.server.requestPasswordReset',
-      opts?.qp,
-      data,
-      opts,
-    )
+  requestPasswordReset<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerRequestPasswordReset.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerRequestPasswordReset.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.requestPasswordReset' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  reserveSigningKey(
-    data?: ComAtprotoServerReserveSigningKey.InputSchema,
-    opts?: ComAtprotoServerReserveSigningKey.CallOptions,
-  ): Promise<ComAtprotoServerReserveSigningKey.Response> {
-    return this._client.call(
-      'com.atproto.server.reserveSigningKey',
-      opts?.qp,
-      data,
-      opts,
-    )
+  reserveSigningKey<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerReserveSigningKey.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerReserveSigningKey.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.reserveSigningKey' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  resetPassword(
-    data?: ComAtprotoServerResetPassword.InputSchema,
-    opts?: ComAtprotoServerResetPassword.CallOptions,
-  ): Promise<ComAtprotoServerResetPassword.Response> {
-    return this._client
-      .call('com.atproto.server.resetPassword', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoServerResetPassword.toKnownErr(e)
-      })
+  resetPassword<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerResetPassword.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerResetPassword.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.resetPassword' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  revokeAppPassword(
-    data?: ComAtprotoServerRevokeAppPassword.InputSchema,
-    opts?: ComAtprotoServerRevokeAppPassword.CallOptions,
-  ): Promise<ComAtprotoServerRevokeAppPassword.Response> {
-    return this._client.call(
-      'com.atproto.server.revokeAppPassword',
-      opts?.qp,
-      data,
-      opts,
-    )
+  revokeAppPassword<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerRevokeAppPassword.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerRevokeAppPassword.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.revokeAppPassword' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  updateEmail(
-    data?: ComAtprotoServerUpdateEmail.InputSchema,
-    opts?: ComAtprotoServerUpdateEmail.CallOptions,
-  ): Promise<ComAtprotoServerUpdateEmail.Response> {
-    return this._client
-      .call('com.atproto.server.updateEmail', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoServerUpdateEmail.toKnownErr(e)
-      })
+  updateEmail<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoServerUpdateEmail.Handler<ExtractAuth<AV>>,
+      ComAtprotoServerUpdateEmail.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.server.updateEmail' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ComAtprotoSyncNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  getBlob(
-    params?: ComAtprotoSyncGetBlob.QueryParams,
-    opts?: ComAtprotoSyncGetBlob.CallOptions,
-  ): Promise<ComAtprotoSyncGetBlob.Response> {
-    return this._client
-      .call('com.atproto.sync.getBlob', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoSyncGetBlob.toKnownErr(e)
-      })
+  getBlob<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncGetBlob.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncGetBlob.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.getBlob' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getBlocks(
-    params?: ComAtprotoSyncGetBlocks.QueryParams,
-    opts?: ComAtprotoSyncGetBlocks.CallOptions,
-  ): Promise<ComAtprotoSyncGetBlocks.Response> {
-    return this._client
-      .call('com.atproto.sync.getBlocks', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoSyncGetBlocks.toKnownErr(e)
-      })
+  getBlocks<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncGetBlocks.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncGetBlocks.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.getBlocks' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getCheckout(
-    params?: ComAtprotoSyncGetCheckout.QueryParams,
-    opts?: ComAtprotoSyncGetCheckout.CallOptions,
-  ): Promise<ComAtprotoSyncGetCheckout.Response> {
-    return this._client.call(
-      'com.atproto.sync.getCheckout',
-      params,
-      undefined,
-      opts,
-    )
+  getCheckout<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncGetCheckout.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncGetCheckout.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.getCheckout' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getHead(
-    params?: ComAtprotoSyncGetHead.QueryParams,
-    opts?: ComAtprotoSyncGetHead.CallOptions,
-  ): Promise<ComAtprotoSyncGetHead.Response> {
-    return this._client
-      .call('com.atproto.sync.getHead', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoSyncGetHead.toKnownErr(e)
-      })
+  getHead<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncGetHead.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncGetHead.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.getHead' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getHostStatus(
-    params?: ComAtprotoSyncGetHostStatus.QueryParams,
-    opts?: ComAtprotoSyncGetHostStatus.CallOptions,
-  ): Promise<ComAtprotoSyncGetHostStatus.Response> {
-    return this._client
-      .call('com.atproto.sync.getHostStatus', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoSyncGetHostStatus.toKnownErr(e)
-      })
+  getHostStatus<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncGetHostStatus.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncGetHostStatus.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.getHostStatus' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getLatestCommit(
-    params?: ComAtprotoSyncGetLatestCommit.QueryParams,
-    opts?: ComAtprotoSyncGetLatestCommit.CallOptions,
-  ): Promise<ComAtprotoSyncGetLatestCommit.Response> {
-    return this._client
-      .call('com.atproto.sync.getLatestCommit', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoSyncGetLatestCommit.toKnownErr(e)
-      })
+  getLatestCommit<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncGetLatestCommit.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncGetLatestCommit.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.getLatestCommit' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getRecord(
-    params?: ComAtprotoSyncGetRecord.QueryParams,
-    opts?: ComAtprotoSyncGetRecord.CallOptions,
-  ): Promise<ComAtprotoSyncGetRecord.Response> {
-    return this._client
-      .call('com.atproto.sync.getRecord', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoSyncGetRecord.toKnownErr(e)
-      })
+  getRecord<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncGetRecord.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncGetRecord.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.getRecord' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getRepo(
-    params?: ComAtprotoSyncGetRepo.QueryParams,
-    opts?: ComAtprotoSyncGetRepo.CallOptions,
-  ): Promise<ComAtprotoSyncGetRepo.Response> {
-    return this._client
-      .call('com.atproto.sync.getRepo', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoSyncGetRepo.toKnownErr(e)
-      })
+  getRepo<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncGetRepo.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncGetRepo.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.getRepo' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getRepoStatus(
-    params?: ComAtprotoSyncGetRepoStatus.QueryParams,
-    opts?: ComAtprotoSyncGetRepoStatus.CallOptions,
-  ): Promise<ComAtprotoSyncGetRepoStatus.Response> {
-    return this._client
-      .call('com.atproto.sync.getRepoStatus', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoSyncGetRepoStatus.toKnownErr(e)
-      })
+  getRepoStatus<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncGetRepoStatus.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncGetRepoStatus.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.getRepoStatus' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  listBlobs(
-    params?: ComAtprotoSyncListBlobs.QueryParams,
-    opts?: ComAtprotoSyncListBlobs.CallOptions,
-  ): Promise<ComAtprotoSyncListBlobs.Response> {
-    return this._client
-      .call('com.atproto.sync.listBlobs', params, undefined, opts)
-      .catch((e) => {
-        throw ComAtprotoSyncListBlobs.toKnownErr(e)
-      })
+  listBlobs<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncListBlobs.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncListBlobs.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.listBlobs' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  listHosts(
-    params?: ComAtprotoSyncListHosts.QueryParams,
-    opts?: ComAtprotoSyncListHosts.CallOptions,
-  ): Promise<ComAtprotoSyncListHosts.Response> {
-    return this._client.call(
-      'com.atproto.sync.listHosts',
-      params,
-      undefined,
-      opts,
-    )
+  listHosts<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncListHosts.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncListHosts.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.listHosts' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  listRepos(
-    params?: ComAtprotoSyncListRepos.QueryParams,
-    opts?: ComAtprotoSyncListRepos.CallOptions,
-  ): Promise<ComAtprotoSyncListRepos.Response> {
-    return this._client.call(
-      'com.atproto.sync.listRepos',
-      params,
-      undefined,
-      opts,
-    )
+  listRepos<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncListRepos.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncListRepos.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.listRepos' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  listReposByCollection(
-    params?: ComAtprotoSyncListReposByCollection.QueryParams,
-    opts?: ComAtprotoSyncListReposByCollection.CallOptions,
-  ): Promise<ComAtprotoSyncListReposByCollection.Response> {
-    return this._client.call(
-      'com.atproto.sync.listReposByCollection',
-      params,
-      undefined,
-      opts,
-    )
+  listReposByCollection<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncListReposByCollection.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncListReposByCollection.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.listReposByCollection' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  notifyOfUpdate(
-    data?: ComAtprotoSyncNotifyOfUpdate.InputSchema,
-    opts?: ComAtprotoSyncNotifyOfUpdate.CallOptions,
-  ): Promise<ComAtprotoSyncNotifyOfUpdate.Response> {
-    return this._client.call(
-      'com.atproto.sync.notifyOfUpdate',
-      opts?.qp,
-      data,
-      opts,
-    )
+  notifyOfUpdate<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncNotifyOfUpdate.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncNotifyOfUpdate.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.notifyOfUpdate' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  requestCrawl(
-    data?: ComAtprotoSyncRequestCrawl.InputSchema,
-    opts?: ComAtprotoSyncRequestCrawl.CallOptions,
-  ): Promise<ComAtprotoSyncRequestCrawl.Response> {
-    return this._client
-      .call('com.atproto.sync.requestCrawl', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ComAtprotoSyncRequestCrawl.toKnownErr(e)
-      })
+  requestCrawl<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncRequestCrawl.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncRequestCrawl.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.requestCrawl' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  subscribeRepos<AV extends StreamAuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoSyncSubscribeRepos.Handler<ExtractAuth<AV>>,
+      ComAtprotoSyncSubscribeRepos.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.sync.subscribeRepos' // @ts-ignore
+    return this._server.xrpc.streamMethod(nsid, cfg)
   }
 }
 
 export class ComAtprotoTempNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  addReservedHandle(
-    data?: ComAtprotoTempAddReservedHandle.InputSchema,
-    opts?: ComAtprotoTempAddReservedHandle.CallOptions,
-  ): Promise<ComAtprotoTempAddReservedHandle.Response> {
-    return this._client.call(
-      'com.atproto.temp.addReservedHandle',
-      opts?.qp,
-      data,
-      opts,
-    )
+  addReservedHandle<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoTempAddReservedHandle.Handler<ExtractAuth<AV>>,
+      ComAtprotoTempAddReservedHandle.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.temp.addReservedHandle' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  checkSignupQueue(
-    params?: ComAtprotoTempCheckSignupQueue.QueryParams,
-    opts?: ComAtprotoTempCheckSignupQueue.CallOptions,
-  ): Promise<ComAtprotoTempCheckSignupQueue.Response> {
-    return this._client.call(
-      'com.atproto.temp.checkSignupQueue',
-      params,
-      undefined,
-      opts,
-    )
+  checkSignupQueue<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoTempCheckSignupQueue.Handler<ExtractAuth<AV>>,
+      ComAtprotoTempCheckSignupQueue.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.temp.checkSignupQueue' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  fetchLabels(
-    params?: ComAtprotoTempFetchLabels.QueryParams,
-    opts?: ComAtprotoTempFetchLabels.CallOptions,
-  ): Promise<ComAtprotoTempFetchLabels.Response> {
-    return this._client.call(
-      'com.atproto.temp.fetchLabels',
-      params,
-      undefined,
-      opts,
-    )
+  fetchLabels<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoTempFetchLabels.Handler<ExtractAuth<AV>>,
+      ComAtprotoTempFetchLabels.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.temp.fetchLabels' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  requestPhoneVerification(
-    data?: ComAtprotoTempRequestPhoneVerification.InputSchema,
-    opts?: ComAtprotoTempRequestPhoneVerification.CallOptions,
-  ): Promise<ComAtprotoTempRequestPhoneVerification.Response> {
-    return this._client.call(
-      'com.atproto.temp.requestPhoneVerification',
-      opts?.qp,
-      data,
-      opts,
-    )
+  requestPhoneVerification<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ComAtprotoTempRequestPhoneVerification.Handler<ExtractAuth<AV>>,
+      ComAtprotoTempRequestPhoneVerification.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'com.atproto.temp.requestPhoneVerification' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class AppNS {
+  _server: Server
+  bsky: AppBskyNS
+
+  constructor(server: Server) {
+    this._server = server
+    this.bsky = new AppBskyNS(server)
+  }
+}
+
+export class AppBskyNS {
+  _server: Server
+  actor: AppBskyActorNS
+  embed: AppBskyEmbedNS
+  feed: AppBskyFeedNS
+  graph: AppBskyGraphNS
+  labeler: AppBskyLabelerNS
+  notification: AppBskyNotificationNS
+  richtext: AppBskyRichtextNS
+  unspecced: AppBskyUnspeccedNS
+  video: AppBskyVideoNS
+
+  constructor(server: Server) {
+    this._server = server
+    this.actor = new AppBskyActorNS(server)
+    this.embed = new AppBskyEmbedNS(server)
+    this.feed = new AppBskyFeedNS(server)
+    this.graph = new AppBskyGraphNS(server)
+    this.labeler = new AppBskyLabelerNS(server)
+    this.notification = new AppBskyNotificationNS(server)
+    this.richtext = new AppBskyRichtextNS(server)
+    this.unspecced = new AppBskyUnspeccedNS(server)
+    this.video = new AppBskyVideoNS(server)
+  }
+}
+
+export class AppBskyActorNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  getPreferences<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyActorGetPreferences.Handler<ExtractAuth<AV>>,
+      AppBskyActorGetPreferences.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.actor.getPreferences' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getProfile<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyActorGetProfile.Handler<ExtractAuth<AV>>,
+      AppBskyActorGetProfile.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.actor.getProfile' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getProfiles<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyActorGetProfiles.Handler<ExtractAuth<AV>>,
+      AppBskyActorGetProfiles.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.actor.getProfiles' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getSuggestions<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyActorGetSuggestions.Handler<ExtractAuth<AV>>,
+      AppBskyActorGetSuggestions.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.actor.getSuggestions' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  putPreferences<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyActorPutPreferences.Handler<ExtractAuth<AV>>,
+      AppBskyActorPutPreferences.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.actor.putPreferences' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  searchActors<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyActorSearchActors.Handler<ExtractAuth<AV>>,
+      AppBskyActorSearchActors.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.actor.searchActors' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  searchActorsTypeahead<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyActorSearchActorsTypeahead.Handler<ExtractAuth<AV>>,
+      AppBskyActorSearchActorsTypeahead.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.actor.searchActorsTypeahead' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class AppBskyEmbedNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+}
+
+export class AppBskyFeedNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  describeFeedGenerator<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedDescribeFeedGenerator.Handler<ExtractAuth<AV>>,
+      AppBskyFeedDescribeFeedGenerator.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.describeFeedGenerator' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getActorFeeds<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetActorFeeds.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetActorFeeds.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getActorFeeds' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getActorLikes<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetActorLikes.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetActorLikes.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getActorLikes' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getAuthorFeed<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetAuthorFeed.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetAuthorFeed.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getAuthorFeed' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getFeed<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetFeed.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetFeed.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getFeed' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getFeedGenerator<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetFeedGenerator.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetFeedGenerator.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getFeedGenerator' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getFeedGenerators<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetFeedGenerators.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetFeedGenerators.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getFeedGenerators' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getFeedSkeleton<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetFeedSkeleton.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetFeedSkeleton.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getFeedSkeleton' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getLikes<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetLikes.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetLikes.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getLikes' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getListFeed<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetListFeed.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetListFeed.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getListFeed' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getPostThread<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetPostThread.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetPostThread.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getPostThread' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getPosts<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetPosts.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetPosts.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getPosts' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getQuotes<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetQuotes.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetQuotes.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getQuotes' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getRepostedBy<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetRepostedBy.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetRepostedBy.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getRepostedBy' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getSuggestedFeeds<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetSuggestedFeeds.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetSuggestedFeeds.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getSuggestedFeeds' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getTimeline<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedGetTimeline.Handler<ExtractAuth<AV>>,
+      AppBskyFeedGetTimeline.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.getTimeline' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  searchPosts<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedSearchPosts.Handler<ExtractAuth<AV>>,
+      AppBskyFeedSearchPosts.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.searchPosts' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  sendInteractions<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyFeedSendInteractions.Handler<ExtractAuth<AV>>,
+      AppBskyFeedSendInteractions.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.feed.sendInteractions' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class AppBskyGraphNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  getActorStarterPacks<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetActorStarterPacks.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetActorStarterPacks.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getActorStarterPacks' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getBlocks<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetBlocks.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetBlocks.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getBlocks' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getFollowers<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetFollowers.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetFollowers.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getFollowers' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getFollows<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetFollows.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetFollows.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getFollows' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getKnownFollowers<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetKnownFollowers.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetKnownFollowers.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getKnownFollowers' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getList<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetList.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetList.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getList' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getListBlocks<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetListBlocks.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetListBlocks.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getListBlocks' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getListMutes<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetListMutes.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetListMutes.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getListMutes' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getLists<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetLists.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetLists.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getLists' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getMutes<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetMutes.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetMutes.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getMutes' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getRelationships<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetRelationships.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetRelationships.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getRelationships' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getStarterPack<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetStarterPack.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetStarterPack.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getStarterPack' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getStarterPacks<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetStarterPacks.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetStarterPacks.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getStarterPacks' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getSuggestedFollowsByActor<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphGetSuggestedFollowsByActor.Handler<ExtractAuth<AV>>,
+      AppBskyGraphGetSuggestedFollowsByActor.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.getSuggestedFollowsByActor' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  muteActor<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphMuteActor.Handler<ExtractAuth<AV>>,
+      AppBskyGraphMuteActor.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.muteActor' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  muteActorList<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphMuteActorList.Handler<ExtractAuth<AV>>,
+      AppBskyGraphMuteActorList.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.muteActorList' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  muteThread<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphMuteThread.Handler<ExtractAuth<AV>>,
+      AppBskyGraphMuteThread.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.muteThread' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  searchStarterPacks<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphSearchStarterPacks.Handler<ExtractAuth<AV>>,
+      AppBskyGraphSearchStarterPacks.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.searchStarterPacks' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  unmuteActor<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphUnmuteActor.Handler<ExtractAuth<AV>>,
+      AppBskyGraphUnmuteActor.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.unmuteActor' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  unmuteActorList<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphUnmuteActorList.Handler<ExtractAuth<AV>>,
+      AppBskyGraphUnmuteActorList.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.unmuteActorList' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  unmuteThread<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyGraphUnmuteThread.Handler<ExtractAuth<AV>>,
+      AppBskyGraphUnmuteThread.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.graph.unmuteThread' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class AppBskyLabelerNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  getServices<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyLabelerGetServices.Handler<ExtractAuth<AV>>,
+      AppBskyLabelerGetServices.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.labeler.getServices' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class AppBskyNotificationNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  getUnreadCount<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyNotificationGetUnreadCount.Handler<ExtractAuth<AV>>,
+      AppBskyNotificationGetUnreadCount.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.notification.getUnreadCount' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  listNotifications<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyNotificationListNotifications.Handler<ExtractAuth<AV>>,
+      AppBskyNotificationListNotifications.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.notification.listNotifications' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  putPreferences<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyNotificationPutPreferences.Handler<ExtractAuth<AV>>,
+      AppBskyNotificationPutPreferences.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.notification.putPreferences' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  registerPush<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyNotificationRegisterPush.Handler<ExtractAuth<AV>>,
+      AppBskyNotificationRegisterPush.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.notification.registerPush' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  updateSeen<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyNotificationUpdateSeen.Handler<ExtractAuth<AV>>,
+      AppBskyNotificationUpdateSeen.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.notification.updateSeen' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class AppBskyRichtextNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+}
+
+export class AppBskyUnspeccedNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  getConfig<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetConfig.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetConfig.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getConfig' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getPopularFeedGenerators<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetPopularFeedGenerators.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetPopularFeedGenerators.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getPopularFeedGenerators' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getSuggestedFeeds<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetSuggestedFeeds.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetSuggestedFeeds.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getSuggestedFeeds' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getSuggestedFeedsSkeleton<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetSuggestedFeedsSkeleton.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetSuggestedFeedsSkeleton.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getSuggestedFeedsSkeleton' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getSuggestedStarterPacks<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetSuggestedStarterPacks.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetSuggestedStarterPacks.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getSuggestedStarterPacks' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getSuggestedStarterPacksSkeleton<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetSuggestedStarterPacksSkeleton.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetSuggestedStarterPacksSkeleton.HandlerReqCtx<
+        ExtractAuth<AV>
+      >
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getSuggestedStarterPacksSkeleton' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getSuggestedUsers<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetSuggestedUsers.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetSuggestedUsers.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getSuggestedUsers' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getSuggestedUsersSkeleton<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetSuggestedUsersSkeleton.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetSuggestedUsersSkeleton.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getSuggestedUsersSkeleton' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getSuggestionsSkeleton<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetSuggestionsSkeleton.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetSuggestionsSkeleton.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getSuggestionsSkeleton' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getTaggedSuggestions<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetTaggedSuggestions.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetTaggedSuggestions.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getTaggedSuggestions' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getTrendingTopics<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetTrendingTopics.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetTrendingTopics.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getTrendingTopics' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getTrends<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetTrends.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetTrends.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getTrends' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getTrendsSkeleton<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedGetTrendsSkeleton.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedGetTrendsSkeleton.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.getTrendsSkeleton' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  searchActorsSkeleton<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedSearchActorsSkeleton.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedSearchActorsSkeleton.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.searchActorsSkeleton' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  searchPostsSkeleton<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedSearchPostsSkeleton.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedSearchPostsSkeleton.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.searchPostsSkeleton' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  searchStarterPacksSkeleton<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyUnspeccedSearchStarterPacksSkeleton.Handler<ExtractAuth<AV>>,
+      AppBskyUnspeccedSearchStarterPacksSkeleton.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.unspecced.searchStarterPacksSkeleton' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class AppBskyVideoNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  getJobStatus<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyVideoGetJobStatus.Handler<ExtractAuth<AV>>,
+      AppBskyVideoGetJobStatus.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.video.getJobStatus' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getUploadLimits<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyVideoGetUploadLimits.Handler<ExtractAuth<AV>>,
+      AppBskyVideoGetUploadLimits.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.video.getUploadLimits' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  uploadVideo<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      AppBskyVideoUploadVideo.Handler<ExtractAuth<AV>>,
+      AppBskyVideoUploadVideo.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'app.bsky.video.uploadVideo' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class ChatNS {
+  _server: Server
+  bsky: ChatBskyNS
+
+  constructor(server: Server) {
+    this._server = server
+    this.bsky = new ChatBskyNS(server)
+  }
+}
+
+export class ChatBskyNS {
+  _server: Server
+  actor: ChatBskyActorNS
+  convo: ChatBskyConvoNS
+  moderation: ChatBskyModerationNS
+
+  constructor(server: Server) {
+    this._server = server
+    this.actor = new ChatBskyActorNS(server)
+    this.convo = new ChatBskyConvoNS(server)
+    this.moderation = new ChatBskyModerationNS(server)
+  }
+}
+
+export class ChatBskyActorNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  deleteAccount<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyActorDeleteAccount.Handler<ExtractAuth<AV>>,
+      ChatBskyActorDeleteAccount.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.actor.deleteAccount' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  exportAccountData<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyActorExportAccountData.Handler<ExtractAuth<AV>>,
+      ChatBskyActorExportAccountData.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.actor.exportAccountData' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class ChatBskyConvoNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  acceptConvo<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoAcceptConvo.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoAcceptConvo.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.acceptConvo' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  addReaction<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoAddReaction.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoAddReaction.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.addReaction' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  deleteMessageForSelf<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoDeleteMessageForSelf.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoDeleteMessageForSelf.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.deleteMessageForSelf' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getConvo<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoGetConvo.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoGetConvo.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.getConvo' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getConvoAvailability<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoGetConvoAvailability.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoGetConvoAvailability.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.getConvoAvailability' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getConvoForMembers<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoGetConvoForMembers.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoGetConvoForMembers.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.getConvoForMembers' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getLog<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoGetLog.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoGetLog.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.getLog' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getMessages<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoGetMessages.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoGetMessages.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.getMessages' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  leaveConvo<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoLeaveConvo.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoLeaveConvo.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.leaveConvo' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  listConvos<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoListConvos.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoListConvos.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.listConvos' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  muteConvo<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoMuteConvo.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoMuteConvo.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.muteConvo' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  removeReaction<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoRemoveReaction.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoRemoveReaction.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.removeReaction' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  sendMessage<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoSendMessage.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoSendMessage.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.sendMessage' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  sendMessageBatch<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoSendMessageBatch.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoSendMessageBatch.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.sendMessageBatch' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  unmuteConvo<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoUnmuteConvo.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoUnmuteConvo.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.unmuteConvo' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  updateAllRead<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoUpdateAllRead.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoUpdateAllRead.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.updateAllRead' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  updateRead<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyConvoUpdateRead.Handler<ExtractAuth<AV>>,
+      ChatBskyConvoUpdateRead.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.convo.updateRead' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+}
+
+export class ChatBskyModerationNS {
+  _server: Server
+
+  constructor(server: Server) {
+    this._server = server
+  }
+
+  getActorMetadata<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyModerationGetActorMetadata.Handler<ExtractAuth<AV>>,
+      ChatBskyModerationGetActorMetadata.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.moderation.getActorMetadata' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  getMessageContext<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyModerationGetMessageContext.Handler<ExtractAuth<AV>>,
+      ChatBskyModerationGetMessageContext.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.moderation.getMessageContext' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
+  }
+
+  updateActorAccess<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ChatBskyModerationUpdateActorAccess.Handler<ExtractAuth<AV>>,
+      ChatBskyModerationUpdateActorAccess.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'chat.bsky.moderation.updateActorAccess' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ToolsNS {
-  _client: XrpcClient
+  _server: Server
   ozone: ToolsOzoneNS
 
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.ozone = new ToolsOzoneNS(client)
+  constructor(server: Server) {
+    this._server = server
+    this.ozone = new ToolsOzoneNS(server)
   }
 }
 
 export class ToolsOzoneNS {
-  _client: XrpcClient
+  _server: Server
   communication: ToolsOzoneCommunicationNS
   hosting: ToolsOzoneHostingNS
   moderation: ToolsOzoneModerationNS
@@ -3960,499 +2501,510 @@ export class ToolsOzoneNS {
   team: ToolsOzoneTeamNS
   verification: ToolsOzoneVerificationNS
 
-  constructor(client: XrpcClient) {
-    this._client = client
-    this.communication = new ToolsOzoneCommunicationNS(client)
-    this.hosting = new ToolsOzoneHostingNS(client)
-    this.moderation = new ToolsOzoneModerationNS(client)
-    this.server = new ToolsOzoneServerNS(client)
-    this.set = new ToolsOzoneSetNS(client)
-    this.setting = new ToolsOzoneSettingNS(client)
-    this.signature = new ToolsOzoneSignatureNS(client)
-    this.team = new ToolsOzoneTeamNS(client)
-    this.verification = new ToolsOzoneVerificationNS(client)
+  constructor(server: Server) {
+    this._server = server
+    this.communication = new ToolsOzoneCommunicationNS(server)
+    this.hosting = new ToolsOzoneHostingNS(server)
+    this.moderation = new ToolsOzoneModerationNS(server)
+    this.server = new ToolsOzoneServerNS(server)
+    this.set = new ToolsOzoneSetNS(server)
+    this.setting = new ToolsOzoneSettingNS(server)
+    this.signature = new ToolsOzoneSignatureNS(server)
+    this.team = new ToolsOzoneTeamNS(server)
+    this.verification = new ToolsOzoneVerificationNS(server)
   }
 }
 
 export class ToolsOzoneCommunicationNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  createTemplate(
-    data?: ToolsOzoneCommunicationCreateTemplate.InputSchema,
-    opts?: ToolsOzoneCommunicationCreateTemplate.CallOptions,
-  ): Promise<ToolsOzoneCommunicationCreateTemplate.Response> {
-    return this._client
-      .call('tools.ozone.communication.createTemplate', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ToolsOzoneCommunicationCreateTemplate.toKnownErr(e)
-      })
+  createTemplate<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneCommunicationCreateTemplate.Handler<ExtractAuth<AV>>,
+      ToolsOzoneCommunicationCreateTemplate.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.communication.createTemplate' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  deleteTemplate(
-    data?: ToolsOzoneCommunicationDeleteTemplate.InputSchema,
-    opts?: ToolsOzoneCommunicationDeleteTemplate.CallOptions,
-  ): Promise<ToolsOzoneCommunicationDeleteTemplate.Response> {
-    return this._client.call(
-      'tools.ozone.communication.deleteTemplate',
-      opts?.qp,
-      data,
-      opts,
-    )
+  deleteTemplate<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneCommunicationDeleteTemplate.Handler<ExtractAuth<AV>>,
+      ToolsOzoneCommunicationDeleteTemplate.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.communication.deleteTemplate' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  listTemplates(
-    params?: ToolsOzoneCommunicationListTemplates.QueryParams,
-    opts?: ToolsOzoneCommunicationListTemplates.CallOptions,
-  ): Promise<ToolsOzoneCommunicationListTemplates.Response> {
-    return this._client.call(
-      'tools.ozone.communication.listTemplates',
-      params,
-      undefined,
-      opts,
-    )
+  listTemplates<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneCommunicationListTemplates.Handler<ExtractAuth<AV>>,
+      ToolsOzoneCommunicationListTemplates.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.communication.listTemplates' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  updateTemplate(
-    data?: ToolsOzoneCommunicationUpdateTemplate.InputSchema,
-    opts?: ToolsOzoneCommunicationUpdateTemplate.CallOptions,
-  ): Promise<ToolsOzoneCommunicationUpdateTemplate.Response> {
-    return this._client
-      .call('tools.ozone.communication.updateTemplate', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ToolsOzoneCommunicationUpdateTemplate.toKnownErr(e)
-      })
+  updateTemplate<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneCommunicationUpdateTemplate.Handler<ExtractAuth<AV>>,
+      ToolsOzoneCommunicationUpdateTemplate.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.communication.updateTemplate' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ToolsOzoneHostingNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  getAccountHistory(
-    params?: ToolsOzoneHostingGetAccountHistory.QueryParams,
-    opts?: ToolsOzoneHostingGetAccountHistory.CallOptions,
-  ): Promise<ToolsOzoneHostingGetAccountHistory.Response> {
-    return this._client.call(
-      'tools.ozone.hosting.getAccountHistory',
-      params,
-      undefined,
-      opts,
-    )
+  getAccountHistory<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneHostingGetAccountHistory.Handler<ExtractAuth<AV>>,
+      ToolsOzoneHostingGetAccountHistory.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.hosting.getAccountHistory' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ToolsOzoneModerationNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  emitEvent(
-    data?: ToolsOzoneModerationEmitEvent.InputSchema,
-    opts?: ToolsOzoneModerationEmitEvent.CallOptions,
-  ): Promise<ToolsOzoneModerationEmitEvent.Response> {
-    return this._client
-      .call('tools.ozone.moderation.emitEvent', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ToolsOzoneModerationEmitEvent.toKnownErr(e)
-      })
+  emitEvent<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneModerationEmitEvent.Handler<ExtractAuth<AV>>,
+      ToolsOzoneModerationEmitEvent.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.moderation.emitEvent' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getEvent(
-    params?: ToolsOzoneModerationGetEvent.QueryParams,
-    opts?: ToolsOzoneModerationGetEvent.CallOptions,
-  ): Promise<ToolsOzoneModerationGetEvent.Response> {
-    return this._client.call(
-      'tools.ozone.moderation.getEvent',
-      params,
-      undefined,
-      opts,
-    )
+  getEvent<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneModerationGetEvent.Handler<ExtractAuth<AV>>,
+      ToolsOzoneModerationGetEvent.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.moderation.getEvent' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getRecord(
-    params?: ToolsOzoneModerationGetRecord.QueryParams,
-    opts?: ToolsOzoneModerationGetRecord.CallOptions,
-  ): Promise<ToolsOzoneModerationGetRecord.Response> {
-    return this._client
-      .call('tools.ozone.moderation.getRecord', params, undefined, opts)
-      .catch((e) => {
-        throw ToolsOzoneModerationGetRecord.toKnownErr(e)
-      })
+  getRecord<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneModerationGetRecord.Handler<ExtractAuth<AV>>,
+      ToolsOzoneModerationGetRecord.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.moderation.getRecord' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getRecords(
-    params?: ToolsOzoneModerationGetRecords.QueryParams,
-    opts?: ToolsOzoneModerationGetRecords.CallOptions,
-  ): Promise<ToolsOzoneModerationGetRecords.Response> {
-    return this._client.call(
-      'tools.ozone.moderation.getRecords',
-      params,
-      undefined,
-      opts,
-    )
+  getRecords<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneModerationGetRecords.Handler<ExtractAuth<AV>>,
+      ToolsOzoneModerationGetRecords.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.moderation.getRecords' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getRepo(
-    params?: ToolsOzoneModerationGetRepo.QueryParams,
-    opts?: ToolsOzoneModerationGetRepo.CallOptions,
-  ): Promise<ToolsOzoneModerationGetRepo.Response> {
-    return this._client
-      .call('tools.ozone.moderation.getRepo', params, undefined, opts)
-      .catch((e) => {
-        throw ToolsOzoneModerationGetRepo.toKnownErr(e)
-      })
+  getRepo<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneModerationGetRepo.Handler<ExtractAuth<AV>>,
+      ToolsOzoneModerationGetRepo.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.moderation.getRepo' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getReporterStats(
-    params?: ToolsOzoneModerationGetReporterStats.QueryParams,
-    opts?: ToolsOzoneModerationGetReporterStats.CallOptions,
-  ): Promise<ToolsOzoneModerationGetReporterStats.Response> {
-    return this._client.call(
-      'tools.ozone.moderation.getReporterStats',
-      params,
-      undefined,
-      opts,
-    )
+  getReporterStats<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneModerationGetReporterStats.Handler<ExtractAuth<AV>>,
+      ToolsOzoneModerationGetReporterStats.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.moderation.getReporterStats' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getRepos(
-    params?: ToolsOzoneModerationGetRepos.QueryParams,
-    opts?: ToolsOzoneModerationGetRepos.CallOptions,
-  ): Promise<ToolsOzoneModerationGetRepos.Response> {
-    return this._client.call(
-      'tools.ozone.moderation.getRepos',
-      params,
-      undefined,
-      opts,
-    )
+  getRepos<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneModerationGetRepos.Handler<ExtractAuth<AV>>,
+      ToolsOzoneModerationGetRepos.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.moderation.getRepos' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getSubjects(
-    params?: ToolsOzoneModerationGetSubjects.QueryParams,
-    opts?: ToolsOzoneModerationGetSubjects.CallOptions,
-  ): Promise<ToolsOzoneModerationGetSubjects.Response> {
-    return this._client.call(
-      'tools.ozone.moderation.getSubjects',
-      params,
-      undefined,
-      opts,
-    )
+  getSubjects<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneModerationGetSubjects.Handler<ExtractAuth<AV>>,
+      ToolsOzoneModerationGetSubjects.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.moderation.getSubjects' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  queryEvents(
-    params?: ToolsOzoneModerationQueryEvents.QueryParams,
-    opts?: ToolsOzoneModerationQueryEvents.CallOptions,
-  ): Promise<ToolsOzoneModerationQueryEvents.Response> {
-    return this._client.call(
-      'tools.ozone.moderation.queryEvents',
-      params,
-      undefined,
-      opts,
-    )
+  queryEvents<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneModerationQueryEvents.Handler<ExtractAuth<AV>>,
+      ToolsOzoneModerationQueryEvents.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.moderation.queryEvents' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  queryStatuses(
-    params?: ToolsOzoneModerationQueryStatuses.QueryParams,
-    opts?: ToolsOzoneModerationQueryStatuses.CallOptions,
-  ): Promise<ToolsOzoneModerationQueryStatuses.Response> {
-    return this._client.call(
-      'tools.ozone.moderation.queryStatuses',
-      params,
-      undefined,
-      opts,
-    )
+  queryStatuses<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneModerationQueryStatuses.Handler<ExtractAuth<AV>>,
+      ToolsOzoneModerationQueryStatuses.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.moderation.queryStatuses' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  searchRepos(
-    params?: ToolsOzoneModerationSearchRepos.QueryParams,
-    opts?: ToolsOzoneModerationSearchRepos.CallOptions,
-  ): Promise<ToolsOzoneModerationSearchRepos.Response> {
-    return this._client.call(
-      'tools.ozone.moderation.searchRepos',
-      params,
-      undefined,
-      opts,
-    )
+  searchRepos<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneModerationSearchRepos.Handler<ExtractAuth<AV>>,
+      ToolsOzoneModerationSearchRepos.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.moderation.searchRepos' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ToolsOzoneServerNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  getConfig(
-    params?: ToolsOzoneServerGetConfig.QueryParams,
-    opts?: ToolsOzoneServerGetConfig.CallOptions,
-  ): Promise<ToolsOzoneServerGetConfig.Response> {
-    return this._client.call(
-      'tools.ozone.server.getConfig',
-      params,
-      undefined,
-      opts,
-    )
+  getConfig<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneServerGetConfig.Handler<ExtractAuth<AV>>,
+      ToolsOzoneServerGetConfig.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.server.getConfig' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ToolsOzoneSetNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  addValues(
-    data?: ToolsOzoneSetAddValues.InputSchema,
-    opts?: ToolsOzoneSetAddValues.CallOptions,
-  ): Promise<ToolsOzoneSetAddValues.Response> {
-    return this._client.call('tools.ozone.set.addValues', opts?.qp, data, opts)
+  addValues<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSetAddValues.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSetAddValues.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.set.addValues' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  deleteSet(
-    data?: ToolsOzoneSetDeleteSet.InputSchema,
-    opts?: ToolsOzoneSetDeleteSet.CallOptions,
-  ): Promise<ToolsOzoneSetDeleteSet.Response> {
-    return this._client
-      .call('tools.ozone.set.deleteSet', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ToolsOzoneSetDeleteSet.toKnownErr(e)
-      })
+  deleteSet<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSetDeleteSet.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSetDeleteSet.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.set.deleteSet' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  deleteValues(
-    data?: ToolsOzoneSetDeleteValues.InputSchema,
-    opts?: ToolsOzoneSetDeleteValues.CallOptions,
-  ): Promise<ToolsOzoneSetDeleteValues.Response> {
-    return this._client
-      .call('tools.ozone.set.deleteValues', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ToolsOzoneSetDeleteValues.toKnownErr(e)
-      })
+  deleteValues<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSetDeleteValues.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSetDeleteValues.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.set.deleteValues' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  getValues(
-    params?: ToolsOzoneSetGetValues.QueryParams,
-    opts?: ToolsOzoneSetGetValues.CallOptions,
-  ): Promise<ToolsOzoneSetGetValues.Response> {
-    return this._client
-      .call('tools.ozone.set.getValues', params, undefined, opts)
-      .catch((e) => {
-        throw ToolsOzoneSetGetValues.toKnownErr(e)
-      })
+  getValues<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSetGetValues.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSetGetValues.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.set.getValues' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  querySets(
-    params?: ToolsOzoneSetQuerySets.QueryParams,
-    opts?: ToolsOzoneSetQuerySets.CallOptions,
-  ): Promise<ToolsOzoneSetQuerySets.Response> {
-    return this._client.call(
-      'tools.ozone.set.querySets',
-      params,
-      undefined,
-      opts,
-    )
+  querySets<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSetQuerySets.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSetQuerySets.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.set.querySets' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  upsertSet(
-    data?: ToolsOzoneSetUpsertSet.InputSchema,
-    opts?: ToolsOzoneSetUpsertSet.CallOptions,
-  ): Promise<ToolsOzoneSetUpsertSet.Response> {
-    return this._client.call('tools.ozone.set.upsertSet', opts?.qp, data, opts)
+  upsertSet<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSetUpsertSet.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSetUpsertSet.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.set.upsertSet' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ToolsOzoneSettingNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  listOptions(
-    params?: ToolsOzoneSettingListOptions.QueryParams,
-    opts?: ToolsOzoneSettingListOptions.CallOptions,
-  ): Promise<ToolsOzoneSettingListOptions.Response> {
-    return this._client.call(
-      'tools.ozone.setting.listOptions',
-      params,
-      undefined,
-      opts,
-    )
+  listOptions<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSettingListOptions.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSettingListOptions.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.setting.listOptions' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  removeOptions(
-    data?: ToolsOzoneSettingRemoveOptions.InputSchema,
-    opts?: ToolsOzoneSettingRemoveOptions.CallOptions,
-  ): Promise<ToolsOzoneSettingRemoveOptions.Response> {
-    return this._client.call(
-      'tools.ozone.setting.removeOptions',
-      opts?.qp,
-      data,
-      opts,
-    )
+  removeOptions<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSettingRemoveOptions.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSettingRemoveOptions.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.setting.removeOptions' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  upsertOption(
-    data?: ToolsOzoneSettingUpsertOption.InputSchema,
-    opts?: ToolsOzoneSettingUpsertOption.CallOptions,
-  ): Promise<ToolsOzoneSettingUpsertOption.Response> {
-    return this._client.call(
-      'tools.ozone.setting.upsertOption',
-      opts?.qp,
-      data,
-      opts,
-    )
+  upsertOption<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSettingUpsertOption.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSettingUpsertOption.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.setting.upsertOption' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ToolsOzoneSignatureNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  findCorrelation(
-    params?: ToolsOzoneSignatureFindCorrelation.QueryParams,
-    opts?: ToolsOzoneSignatureFindCorrelation.CallOptions,
-  ): Promise<ToolsOzoneSignatureFindCorrelation.Response> {
-    return this._client.call(
-      'tools.ozone.signature.findCorrelation',
-      params,
-      undefined,
-      opts,
-    )
+  findCorrelation<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSignatureFindCorrelation.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSignatureFindCorrelation.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.signature.findCorrelation' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  findRelatedAccounts(
-    params?: ToolsOzoneSignatureFindRelatedAccounts.QueryParams,
-    opts?: ToolsOzoneSignatureFindRelatedAccounts.CallOptions,
-  ): Promise<ToolsOzoneSignatureFindRelatedAccounts.Response> {
-    return this._client.call(
-      'tools.ozone.signature.findRelatedAccounts',
-      params,
-      undefined,
-      opts,
-    )
+  findRelatedAccounts<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSignatureFindRelatedAccounts.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSignatureFindRelatedAccounts.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.signature.findRelatedAccounts' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  searchAccounts(
-    params?: ToolsOzoneSignatureSearchAccounts.QueryParams,
-    opts?: ToolsOzoneSignatureSearchAccounts.CallOptions,
-  ): Promise<ToolsOzoneSignatureSearchAccounts.Response> {
-    return this._client.call(
-      'tools.ozone.signature.searchAccounts',
-      params,
-      undefined,
-      opts,
-    )
+  searchAccounts<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneSignatureSearchAccounts.Handler<ExtractAuth<AV>>,
+      ToolsOzoneSignatureSearchAccounts.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.signature.searchAccounts' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ToolsOzoneTeamNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  addMember(
-    data?: ToolsOzoneTeamAddMember.InputSchema,
-    opts?: ToolsOzoneTeamAddMember.CallOptions,
-  ): Promise<ToolsOzoneTeamAddMember.Response> {
-    return this._client
-      .call('tools.ozone.team.addMember', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ToolsOzoneTeamAddMember.toKnownErr(e)
-      })
+  addMember<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneTeamAddMember.Handler<ExtractAuth<AV>>,
+      ToolsOzoneTeamAddMember.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.team.addMember' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  deleteMember(
-    data?: ToolsOzoneTeamDeleteMember.InputSchema,
-    opts?: ToolsOzoneTeamDeleteMember.CallOptions,
-  ): Promise<ToolsOzoneTeamDeleteMember.Response> {
-    return this._client
-      .call('tools.ozone.team.deleteMember', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ToolsOzoneTeamDeleteMember.toKnownErr(e)
-      })
+  deleteMember<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneTeamDeleteMember.Handler<ExtractAuth<AV>>,
+      ToolsOzoneTeamDeleteMember.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.team.deleteMember' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  listMembers(
-    params?: ToolsOzoneTeamListMembers.QueryParams,
-    opts?: ToolsOzoneTeamListMembers.CallOptions,
-  ): Promise<ToolsOzoneTeamListMembers.Response> {
-    return this._client.call(
-      'tools.ozone.team.listMembers',
-      params,
-      undefined,
-      opts,
-    )
+  listMembers<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneTeamListMembers.Handler<ExtractAuth<AV>>,
+      ToolsOzoneTeamListMembers.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.team.listMembers' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  updateMember(
-    data?: ToolsOzoneTeamUpdateMember.InputSchema,
-    opts?: ToolsOzoneTeamUpdateMember.CallOptions,
-  ): Promise<ToolsOzoneTeamUpdateMember.Response> {
-    return this._client
-      .call('tools.ozone.team.updateMember', opts?.qp, data, opts)
-      .catch((e) => {
-        throw ToolsOzoneTeamUpdateMember.toKnownErr(e)
-      })
+  updateMember<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneTeamUpdateMember.Handler<ExtractAuth<AV>>,
+      ToolsOzoneTeamUpdateMember.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.team.updateMember' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
 
 export class ToolsOzoneVerificationNS {
-  _client: XrpcClient
+  _server: Server
 
-  constructor(client: XrpcClient) {
-    this._client = client
+  constructor(server: Server) {
+    this._server = server
   }
 
-  grantVerifications(
-    data?: ToolsOzoneVerificationGrantVerifications.InputSchema,
-    opts?: ToolsOzoneVerificationGrantVerifications.CallOptions,
-  ): Promise<ToolsOzoneVerificationGrantVerifications.Response> {
-    return this._client.call(
-      'tools.ozone.verification.grantVerifications',
-      opts?.qp,
-      data,
-      opts,
-    )
+  grantVerifications<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneVerificationGrantVerifications.Handler<ExtractAuth<AV>>,
+      ToolsOzoneVerificationGrantVerifications.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.verification.grantVerifications' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  listVerifications(
-    params?: ToolsOzoneVerificationListVerifications.QueryParams,
-    opts?: ToolsOzoneVerificationListVerifications.CallOptions,
-  ): Promise<ToolsOzoneVerificationListVerifications.Response> {
-    return this._client.call(
-      'tools.ozone.verification.listVerifications',
-      params,
-      undefined,
-      opts,
-    )
+  listVerifications<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneVerificationListVerifications.Handler<ExtractAuth<AV>>,
+      ToolsOzoneVerificationListVerifications.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.verification.listVerifications' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 
-  revokeVerifications(
-    data?: ToolsOzoneVerificationRevokeVerifications.InputSchema,
-    opts?: ToolsOzoneVerificationRevokeVerifications.CallOptions,
-  ): Promise<ToolsOzoneVerificationRevokeVerifications.Response> {
-    return this._client.call(
-      'tools.ozone.verification.revokeVerifications',
-      opts?.qp,
-      data,
-      opts,
-    )
+  revokeVerifications<AV extends AuthVerifier>(
+    cfg: ConfigOf<
+      AV,
+      ToolsOzoneVerificationRevokeVerifications.Handler<ExtractAuth<AV>>,
+      ToolsOzoneVerificationRevokeVerifications.HandlerReqCtx<ExtractAuth<AV>>
+    >,
+  ) {
+    const nsid = 'tools.ozone.verification.revokeVerifications' // @ts-ignore
+    return this._server.xrpc.method(nsid, cfg)
   }
 }
+
+type SharedRateLimitOpts<T> = {
+  name: string
+  calcKey?: (ctx: T) => string | null
+  calcPoints?: (ctx: T) => number
+}
+type RouteRateLimitOpts<T> = {
+  durationMs: number
+  points: number
+  calcKey?: (ctx: T) => string | null
+  calcPoints?: (ctx: T) => number
+}
+type HandlerOpts = { blobLimit?: number }
+type HandlerRateLimitOpts<T> = SharedRateLimitOpts<T> | RouteRateLimitOpts<T>
+type ConfigOf<Auth, Handler, ReqCtx> =
+  | Handler
+  | {
+      auth?: Auth
+      opts?: HandlerOpts
+      rateLimit?: HandlerRateLimitOpts<ReqCtx> | HandlerRateLimitOpts<ReqCtx>[]
+      handler: Handler
+    }
+type ExtractAuth<AV extends AuthVerifier | StreamAuthVerifier> = Extract<
+  Awaited<ReturnType<AV>>,
+  { credentials: unknown }
+>
