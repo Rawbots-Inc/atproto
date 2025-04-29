@@ -1,7 +1,7 @@
 /**
  * GENERATED CODE - DO NOT MODIFY
  */
-import express from 'express'
+import { HeadersMap, XRPCError } from '@atproto/xrpc'
 import { type ValidationResult, BlobRef } from '@atproto/lexicon'
 import { CID } from 'multiformats/cid'
 import { validate as _validate } from '../../../../lexicons'
@@ -10,7 +10,6 @@ import {
   is$typed as _is$typed,
   type OmitKey,
 } from '../../../../util'
-import { HandlerAuth, HandlerPipeThrough } from '@atproto/xrpc-server'
 
 const is$typed = _is$typed,
   validate = _validate
@@ -46,39 +45,71 @@ export interface OutputSchema {
   didDoc?: { [_ in string]: unknown }
 }
 
-export interface HandlerInput {
-  encoding: 'application/json'
-  body: InputSchema
+export interface CallOptions {
+  signal?: AbortSignal
+  headers?: HeadersMap
+  qp?: QueryParams
+  encoding?: 'application/json'
 }
 
-export interface HandlerSuccess {
-  encoding: 'application/json'
-  body: OutputSchema
-  headers?: { [key: string]: string }
+export interface Response {
+  success: boolean
+  headers: HeadersMap
+  data: OutputSchema
 }
 
-export interface HandlerError {
-  status: number
-  message?: string
-  error?:
-    | 'InvalidHandle'
-    | 'InvalidPassword'
-    | 'InvalidInviteCode'
-    | 'HandleNotAvailable'
-    | 'UnsupportedDomain'
-    | 'UnresolvableDid'
-    | 'IncompatibleDidDoc'
+export class InvalidHandleError extends XRPCError {
+  constructor(src: XRPCError) {
+    super(src.status, src.error, src.message, src.headers, { cause: src })
+  }
 }
 
-export type HandlerOutput = HandlerError | HandlerSuccess | HandlerPipeThrough
-export type HandlerReqCtx<HA extends HandlerAuth = never> = {
-  auth: HA
-  params: QueryParams
-  input: HandlerInput
-  req: express.Request
-  res: express.Response
-  resetRouteRateLimits: () => Promise<void>
+export class InvalidPasswordError extends XRPCError {
+  constructor(src: XRPCError) {
+    super(src.status, src.error, src.message, src.headers, { cause: src })
+  }
 }
-export type Handler<HA extends HandlerAuth = never> = (
-  ctx: HandlerReqCtx<HA>,
-) => Promise<HandlerOutput> | HandlerOutput
+
+export class InvalidInviteCodeError extends XRPCError {
+  constructor(src: XRPCError) {
+    super(src.status, src.error, src.message, src.headers, { cause: src })
+  }
+}
+
+export class HandleNotAvailableError extends XRPCError {
+  constructor(src: XRPCError) {
+    super(src.status, src.error, src.message, src.headers, { cause: src })
+  }
+}
+
+export class UnsupportedDomainError extends XRPCError {
+  constructor(src: XRPCError) {
+    super(src.status, src.error, src.message, src.headers, { cause: src })
+  }
+}
+
+export class UnresolvableDidError extends XRPCError {
+  constructor(src: XRPCError) {
+    super(src.status, src.error, src.message, src.headers, { cause: src })
+  }
+}
+
+export class IncompatibleDidDocError extends XRPCError {
+  constructor(src: XRPCError) {
+    super(src.status, src.error, src.message, src.headers, { cause: src })
+  }
+}
+
+export function toKnownErr(e: any) {
+  if (e instanceof XRPCError) {
+    if (e.error === 'InvalidHandle') return new InvalidHandleError(e)
+    if (e.error === 'InvalidPassword') return new InvalidPasswordError(e)
+    if (e.error === 'InvalidInviteCode') return new InvalidInviteCodeError(e)
+    if (e.error === 'HandleNotAvailable') return new HandleNotAvailableError(e)
+    if (e.error === 'UnsupportedDomain') return new UnsupportedDomainError(e)
+    if (e.error === 'UnresolvableDid') return new UnresolvableDidError(e)
+    if (e.error === 'IncompatibleDidDoc') return new IncompatibleDidDocError(e)
+  }
+
+  return e
+}
